@@ -75,7 +75,7 @@ jobs:
         env:
           GH_PAT: ${{ secrets.SCRAPELESS_GITHUB_TOKEN }}
         run: |
-          git remote set-url origin https://x-access-token:${{ env.GH_PAT }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ env.GH_PAT }}@github.com/${{ github.repository }}.git
           git push --follow-tags origin main
 
       - name: Unpublish all history versions
