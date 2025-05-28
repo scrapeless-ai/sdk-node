@@ -39,6 +39,11 @@ jobs:
       - name: Build package
         run: pnpm build
 
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
@@ -72,15 +77,9 @@ jobs:
 
       - name: Push changes and tags
         if: steps.check-commits.outputs.should_release == 'true'
-        env:
-          GH_PAT: ${{ secrets.PAT }}
         run: |
-          git remote set-url origin https://x-access-token:${{ env.GH_PAT }}@github.com/${{ github.repository }}.git
+          git remote set-url origin git@github.com:${{ github.repository }}.git
           git push --follow-tags origin main
-
-      - name: Unpublish all history versions
-        run: |
-          npm unpublish @scrapeless-ai/sdk@* --force
 
       - name: Publish package
         if: steps.check-commits.outputs.should_release == 'true'
