@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/scrapeless-ai/scrapeless-sdk-node/compare/v0.0.5...v0.0.6) (2025-05-28)
+
+### ⚙️ Continuous Integrations
+
+- delete action publish-github ([b727554](https://github.com/scrapeless-ai/scrapeless-sdk-node/commit/b727554efbbe96d28ce39b094bc51f22c04c6e96))
+
+### 📚 Documentation
+
+- add ISSUE_TEMPLATE ([4e2201a](https://github.com/scrapeless-ai/scrapeless-sdk-node/commit/4e2201a3be83e0e0327be8f910b8cb7b60b12d54))
+- update ISSUE_TEMPLATE ([f8a9498](https://github.com/scrapeless-ai/scrapeless-sdk-node/commit/f8a94985253364f97a3b3d702f1af212159f4f55))
+
+### 📦 Code Refactoring
+
+- browser type declare ([b3d2ef2](https://github.com/scrapeless-ai/scrapeless-sdk-node/commit/b3d2ef2d4889113584d1d4c1e393fd2303747592))
+
 ### [0.0.5](https://github.com/scrapeless-ai/scrapeless-sdk-node/compare/v0.0.4...v0.0.5) (2025-05-28)
 
 ### ✨ Features
