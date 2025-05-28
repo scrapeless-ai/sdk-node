@@ -73,7 +73,7 @@ jobs:
       - name: Push changes and tags
         if: steps.check-commits.outputs.should_release == 'true'
         env:
-          GH_PAT: ${{ secrets.SCRAPELESS_GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.PAT }}
         run: |
           git remote set-url origin https://x-access-token:${{ env.GH_PAT }}@github.com/${{ github.repository }}.git
           git push --follow-tags origin main
