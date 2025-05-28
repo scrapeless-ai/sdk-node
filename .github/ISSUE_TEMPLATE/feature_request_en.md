@@ -4,6 +4,7 @@ about: Suggest an idea for this project
 labels: enhancement
 assignees: ''
 title: '[Feature] '
+type: feature
 ---
 
 **Is your feature request related to a problem? Please describe.**

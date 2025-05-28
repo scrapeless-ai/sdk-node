@@ -3,7 +3,8 @@ name: 功能需求
 about: 用于提出新功能建议
 labels: enhancement
 assignees: ''
-title: '[功能] '
+title: '[Feature] '
+type: feature
 ---
 
 **该功能需求是否和某个问题相关？请描述。**

@@ -3,7 +3,8 @@ name: 缺陷报告
 about: 用于反馈问题和帮助我们改进
 labels: bug
 assignees: ''
-title: '[缺陷] '
+title: '[Bug] '
+type: bug
 ---
 
 **问题描述**
