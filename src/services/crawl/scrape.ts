@@ -1,6 +1,5 @@
 import { ScrapelessError } from '../../client';
 import * as zt from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import {
   BatchScrapeResponse,
   BatchScrapeStatusResponse,
@@ -25,7 +24,7 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     url: string,
     params?: ScrapeParams
   ): Promise<ScrapeResponse<zt.infer<T>> | ErrorResponse> {
-    let jsonData: any = { url, ...params };
+    const jsonData: any = { url, ...params };
 
     try {
       const response = await this.request<any>('/v1/scrape', 'POST', jsonData, {});
@@ -58,7 +57,7 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     pollInterval: number = 2,
     ignoreInvalidURLs?: boolean
   ): Promise<BatchScrapeStatusResponse | ErrorResponse> {
-    let jsonData: any = { urls, ignoreInvalidURLs, ...params };
+    const jsonData: any = { urls, ignoreInvalidURLs, ...params };
 
     try {
       const response = await this.request<any>('/v1/batch/scrape', 'POST', jsonData);

@@ -1,25 +1,8 @@
 import { chromium, Browser, BrowserContext, Page } from 'playwright-core';
-import {
-  BaseBrowser,
-  BaseLaunchOptions,
-  LiveURLResponse,
-  createLogger,
-  ExtendedPageFunctions,
-  AgentCommands
-} from './base';
-import { ScrapelessConfig } from '../types';
+import { BaseBrowser, createLogger } from './base';
+import { ScrapelessConfig, AgentCommands, LiveURLResponse, PlaywrightLaunchOptions } from '../types';
 
 const logger = createLogger('PlaywrightBrowser');
-
-/**
- * Interface for Playwright specific launch options
- */
-export interface PlaywrightLaunchOptions extends BaseLaunchOptions {}
-
-// Extend Playwright's Page type with our custom methods
-declare module 'playwright-core' {
-  interface Page extends ExtendedPageFunctions {}
-}
 
 /**
  * Enhanced Playwright browser implementation using Scrapeless API

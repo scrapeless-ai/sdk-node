@@ -1,27 +1,8 @@
-import puppeteer, { Browser, Page, Viewport } from 'puppeteer-core';
-import {
-  BaseBrowser,
-  BaseLaunchOptions,
-  LiveURLResponse,
-  AgentCommands,
-  createLogger,
-  ExtendedPageFunctions
-} from './base';
-import { ScrapelessConfig } from '../types';
+import puppeteer, { Browser, Page } from 'puppeteer-core';
+import { BaseBrowser, createLogger } from './base';
+import { ScrapelessConfig, LiveURLResponse, AgentCommands, PuppeteerLaunchOptions } from '../types';
 
 const logger = createLogger('PuppeteerBrowser');
-
-/**
- * Interface for Puppeteer specific launch options
- */
-export interface PuppeteerLaunchOptions extends BaseLaunchOptions {
-  defaultViewport?: Viewport | null;
-}
-
-// Extend Puppeteer's Page type with our custom methods
-declare module 'puppeteer-core' {
-  interface Page extends ExtendedPageFunctions {}
-}
 
 /**
  * Enhanced Puppeteer browser implementation using Scrapeless API
