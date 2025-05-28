@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/scrapeless-ai/scrapeless-sdk-node/compare/v0.0.4...v0.0.5) (2025-05-28)
+
+### ✨ Features
+
+- remove debugging service ([411e0a3](https://github.com/scrapeless-ai/scrapeless-sdk-node/commit/411e0a3ea5f611a46b51bc45b4abc3edcc5afd88))
+
 ### [0.0.4](https://github.com/scrapeless-ai/scrapeless-sdk-node/compare/v0.0.3...v0.0.4) (2025-05-28)
 
 ### ✨ Features
