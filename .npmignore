@@ -1,0 +1,6 @@
+**/*
+!/dist/**
+!/examples/**
+!README*.md
+!LICENSE*
+!.env.example

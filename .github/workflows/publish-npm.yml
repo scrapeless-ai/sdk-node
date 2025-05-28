@@ -1,0 +1,86 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+name: Publish NPM
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@scrapeless-ai'
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Check for releasable commits
+        id: check-commits
+        run: |
+          # Get the last release tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tags found, will create initial release"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            # Check if there are any conventional commits since last tag
+            COMMITS=$(git log $LAST_TAG..HEAD --oneline --grep="^feat\|^fix\|^perf\|^refactor\|^docs\|^style\|^test\|^build\|^ci\|^chore\|^revert" || echo "")
+            if [ -n "$COMMITS" ]; then
+              echo "Found releasable commits since $LAST_TAG"
+              echo "should_release=true" >> $GITHUB_OUTPUT
+            else
+              echo "No releasable commits found since $LAST_TAG"
+              echo "should_release=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Generate release
+        if: steps.check-commits.outputs.should_release == 'true'
+        run: |
+          pnpm release
+
+      - name: Push changes and tags
+        if: steps.check-commits.outputs.should_release == 'true'
+        run: |
+          git push --follow-tags origin main
+
+      - name: Unpublish all history versions
+        run: |
+          npm unpublish @scrapeless-ai/sdk@* --force
+
+      - name: Publish package
+        if: steps.check-commits.outputs.should_release == 'true'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

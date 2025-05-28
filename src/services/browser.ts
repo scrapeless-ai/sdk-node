@@ -1,0 +1,62 @@
+import { BaseService } from './base';
+import { ICreateBrowser, ICreateBrowserResponse } from '../types';
+
+// Define default parameters
+const DEFAULT_BROWSER_OPTIONS: ICreateBrowser = {
+  session_name: '',
+  session_ttl: 180,
+  proxy_country: 'ANY'
+};
+
+export class BrowserService extends BaseService {
+  constructor(apiKey: string, baseUrl: string, timeout: number = 30_000) {
+    super(apiKey, baseUrl, timeout);
+  }
+
+  /**
+   * Create a browser session
+   * @param options Browser session configuration
+   * @returns Response containing devtoolsUrl
+   */
+  create(options: ICreateBrowser = {}): ICreateBrowserResponse {
+    // Merge default options with user provided options
+    const data = { ...DEFAULT_BROWSER_OPTIONS, ...options };
+
+    // Build parameter object directly, handle special type conversions
+    const params = {
+      token: this.apiKey,
+      session_name: data.session_name,
+      session_ttl: data.session_ttl?.toString(),
+      session_recording: data.session_recording?.toString(),
+      proxy_country: data.proxy_country,
+      proxy_url: data.proxy_url,
+      fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : undefined
+    };
+
+    if (data.proxy_url) {
+      delete params.proxy_country;
+    }
+
+    // Filter out empty values
+    const filteredParams = Object.entries(params)
+      .filter(([_, value]) => value !== undefined && value !== '')
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+
+    const search = new URLSearchParams(filteredParams);
+
+    let protocol = 'wss';
+    if (this.baseUrl.startsWith('http://')) {
+      protocol = 'ws';
+    }
+    return {
+      browserWSEndpoint: `${protocol}://${this.baseUrl.replace(/^(.*?):\/\//, '')}/browser?${search.toString()}`
+    };
+  }
+
+  /**
+   * Async version of create method (maintains compatibility but calls the sync method directly)
+   */
+  async createAsync(options: ICreateBrowser = {}): Promise<ICreateBrowserResponse> {
+    return this.create(options);
+  }
+}
