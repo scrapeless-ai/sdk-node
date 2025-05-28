@@ -25,17 +25,14 @@ export class PuppeteerBrowser extends BaseBrowser {
    * @returns Connected PuppeteerBrowser instance
    * @throws Error if connection fails
    */
-  public static async connect(
-    options: PuppeteerLaunchOptions = {},
-    config?: ScrapelessConfig
-  ): Promise<PuppeteerBrowser> {
+  public static async connect(config: PuppeteerLaunchOptions & ScrapelessConfig = {}): Promise<PuppeteerBrowser> {
     const browser = new PuppeteerBrowser(config);
     try {
-      const { browserWSEndpoint } = browser.browserService.create(options);
+      const { browserWSEndpoint } = browser.browserService.create(config);
       logger.debug('Connecting to browser: ', { browserWSEndpoint });
       browser.browser = await puppeteer.connect({
         browserWSEndpoint,
-        defaultViewport: options.defaultViewport ?? null
+        defaultViewport: config.defaultViewport ?? null
       });
 
       logger.info('Successfully connected to browser');

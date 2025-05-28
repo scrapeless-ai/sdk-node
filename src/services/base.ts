@@ -42,7 +42,7 @@ export abstract class BaseService {
     // Get response content, parse it if it's JSON
     let data: any;
     const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
+    if (contentType?.includes('application/json')) {
       data = await response.json();
     } else {
       data = await response.text();

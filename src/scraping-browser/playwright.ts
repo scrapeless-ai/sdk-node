@@ -26,13 +26,10 @@ export class PlaywrightBrowser extends BaseBrowser {
    * @returns Connected PlaywrightBrowser instance
    * @throws Error if connection fails
    */
-  public static async connect(
-    options: PlaywrightLaunchOptions = {},
-    config?: ScrapelessConfig
-  ): Promise<PlaywrightBrowser> {
+  public static async connect(config: PlaywrightLaunchOptions & ScrapelessConfig = {}): Promise<PlaywrightBrowser> {
     const b = new PlaywrightBrowser(config);
     try {
-      const { browserWSEndpoint } = b.browserService.create(options);
+      const { browserWSEndpoint } = b.browserService.create(config);
       logger.debug('Connecting to browser: ', { browserWSEndpoint });
       b.browser = await chromium.connectOverCDP({
         wsEndpoint: browserWSEndpoint
