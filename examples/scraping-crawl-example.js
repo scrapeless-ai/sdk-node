@@ -1,7 +1,7 @@
 /**
  * Scrapeless Node SDK - ScrapingCrawl Service Examples (ES Module Version)
  *
- * This example demonstrates how to use the ScrapingCrawl SDK for scraping, crawling, and extraction tasks.
+ * This example demonstrates how to use the ScrapingCrawl SDK for scraping, crawling.
  * Each example uses the same API key, base URL, and utility for saving results to JSON.
  */
 import { ScrapingCrawl } from '../dist/index.js';
@@ -68,36 +68,6 @@ async function exampleCrawl() {
 }
 
 /**
- * Example: Extract structured data from a URL using a Zod schema and save the result.
- */
-async function exampleExtract() {
-  try {
-    // Define schema to extract contents into
-    const schema = z.object({
-      company_mission: z.string(),
-      supports_sso: z.boolean(),
-      is_open_source: z.boolean(),
-      is_in_yc: z.boolean()
-    });
-
-    const scrapeResult = await client.extractUrls(['https://scrapeless.com'], {
-      prompt:
-        'Extract the company mission, whether it supports SSO, whether it is open source, and whether it is in Y Combinator from the page.',
-      schema: schema
-    });
-
-    if (!scrapeResult.success) {
-      throw new Error(`Failed to scrape: ${scrapeResult.error}`);
-    }
-
-    saveObjectToJson(scrapeResult.data, 'scrapeless-demo-extract.json');
-    console.log(scrapeResult.data);
-  } catch (error) {
-    console.error('❌ Extract example failed:', error.message);
-  }
-}
-
-/**
  * Run all ScrapingCrawl examples sequentially.
  */
 async function runExamples() {
@@ -105,8 +75,6 @@ async function runExamples() {
   await exampleScrape();
   console.log('\n');
   await exampleCrawl();
-  console.log('\n');
-  await exampleExtract();
   console.log('\n');
   console.log('🎉 All examples completed');
 }

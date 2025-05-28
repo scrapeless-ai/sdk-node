@@ -100,7 +100,6 @@ export class CrawlService extends ScrapingCrawlBaseService {
         status: response.status,
         total: response.total,
         completed: response.completed,
-        creditsUsed: response.creditsUsed,
         next: getAllData ? undefined : response.next,
         expiresAt: new Date(response.expiresAt),
         data: allData

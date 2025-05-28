@@ -1,20 +1,18 @@
-import { ZodType } from 'zod';
 import { ScrapingCrawlService } from '../services';
 import { ScrapingCrawlBaseService } from '../services/crawl/base';
 import { CrawlService } from '../services/crawl/crawl';
-import { ExtractService } from '../services/crawl/extract';
 import { ScrapeService } from '../services/crawl/scrape';
-import { ScrapeParams, CrawlParams, ExtractParams, ScrapingCrawlConfig } from '../types/scraping-crawl';
+import { ScrapeParams, CrawlParams, ScrapingCrawlConfig } from '../types/scraping-crawl';
 import { getEnv, getEnvWithDefault } from '../env';
 
-interface ScrapelessScrapingCrawl extends CrawlService, ScrapeService, ExtractService, ScrapingCrawlBaseService {}
+interface ScrapelessScrapingCrawl extends CrawlService, ScrapeService, ScrapingCrawlBaseService {}
 
 /**
- * High-level ScrapingCrawl SDK class that provides unified access to scraping, crawling, and extraction services.
+ * High-level ScrapingCrawl SDK class that provides unified access to scraping, crawling services.
  */
 export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
   /**
-   * Underlying service aggregator for scraping, crawling, and extraction.
+   * Underlying service aggregator for scraping, crawling.
    */
   service: ScrapingCrawlService;
 
@@ -30,7 +28,7 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
   }
 
   /**
-   * Scrape a single URL and extract structured data.
+   * Scrape a single URL.
    * @param url Target URL to scrape
    * @param params Optional scraping parameters
    * @returns Scraped data result
@@ -112,35 +110,6 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
    */
   cancelCrawl(id: string) {
     return this.service.crawl.cancelCrawl(id);
-  }
-
-  /**
-   * Extract structured data from one or more URLs using a Zod schema.
-   * @param urls Array of URLs to extract from
-   * @param params Extraction parameters, including Zod schema
-   * @returns Extracted data
-   */
-  extractUrls<T extends ZodType = any>(urls?: string[], params?: ExtractParams<T>) {
-    return this.service.extract.extractUrls(urls, params);
-  }
-
-  /**
-   * Start an asynchronous extraction job for multiple URLs.
-   * @param urls Array of URLs to extract from
-   * @param params Extraction parameters
-   * @returns Job info
-   */
-  asyncExtractUrls(urls: string[], params?: ExtractParams) {
-    return this.service.extract.asyncExtractUrls(urls, params);
-  }
-
-  /**
-   * Get the status of an extraction job.
-   * @param jobId Extraction job ID
-   * @returns Extraction job status and data
-   */
-  getExtractStatus(jobId: string) {
-    return this.service.extract.getExtractStatus(jobId);
   }
 
   /**
