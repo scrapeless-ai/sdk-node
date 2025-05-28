@@ -1,4 +1,3 @@
-import * as zt from 'zod';
 import { ICreateBrowser } from './browser';
 
 /**
@@ -156,7 +155,6 @@ export interface CrawlStatusResponse {
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   completed: number;
   total: number;
-  creditsUsed: number;
   expiresAt: Date;
   next?: string;
   data: ScrapingCrawlDocument<undefined>[];
@@ -171,45 +169,9 @@ export interface BatchScrapeStatusResponse {
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   completed: number;
   total: number;
-  creditsUsed: number;
   expiresAt: Date;
   next?: string;
   data: ScrapingCrawlDocument<undefined>[];
-}
-
-/**
- * Parameters for extracting information from URLs.
- * Defines options for extracting information from URLs.
- */
-export interface AgentOptionsExtract {
-  model?: string;
-  sessionId?: string;
-}
-
-export interface ExtractParams<LLMSchema extends zt.ZodSchema = any> {
-  prompt?: string;
-  schema?: LLMSchema | object;
-  systemPrompt?: string;
-  allowExternalLinks?: boolean;
-  enableWebSearch?: boolean;
-  includeSubdomains?: boolean;
-  origin?: string;
-  showSources?: boolean;
-  scrapeOptions?: CrawlScrapeOptions;
-  agent?: AgentOptionsExtract;
-  browserOptions?: ICreateBrowser;
-}
-
-/**
- * Response interface for extracting information from URLs.
- * Defines the structure of the response received after extracting information from URLs.
- */
-export interface ExtractResponse<LLMSchema extends zt.ZodSchema = any> {
-  success: boolean;
-  data: LLMSchema;
-  error?: string;
-  warning?: string;
-  sources?: string[];
 }
 
 /**
@@ -231,7 +193,6 @@ export interface CrawlErrorsResponse {
   errors: {
     id: string;
     timestamp?: string;
-    url: string;
     error: string;
   }[];
   /**
