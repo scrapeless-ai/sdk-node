@@ -7,6 +7,5 @@ export * from './universal';
 export * from './captcha';
 export * from './proxies';
 export * from './actor';
-export * from './runner';
 export * from './storage';
 export * from './crawl';

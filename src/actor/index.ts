@@ -1,4 +1,4 @@
-import { StorageService, CaptchaService, BrowserService, ProxiesService, RunnerService } from '../services';
+import { StorageService, CaptchaService, BrowserService, ProxiesService } from '../services';
 import {
   IPaginationParams,
   IKVValueData,
@@ -36,11 +36,6 @@ export class Actor {
    */
   proxy: ProxiesService;
 
-  /**
-   * Runner service for actor execution
-   */
-  runner: RunnerService;
-
   datasetId: string;
   namespaceId: string;
   bucketId: string;
@@ -51,7 +46,6 @@ export class Actor {
     const timeout = 30_000;
     const apiKey = getEnv('SCRAPELESS_API_KEY');
     const baseApiURL = getEnvWithDefault('SCRAPELESS_BASE_API_URL', 'https://api.scrapeless.com');
-    const actorURL = getEnvWithDefault('SCRAPELESS_ACTOR_API_URL', 'https://actor.scrapeless.com');
     const storageURL = getEnvWithDefault('SCRAPELESS_STORAGE_API_URL', 'https://storage.scrapeless.com');
     const browserURL = getEnvWithDefault('SCRAPELESS_BROWSER_API_URL', 'https://browser.scrapeless.com');
 
@@ -61,7 +55,6 @@ export class Actor {
     this.queueId = getEnv('SCRAPELESS_QUEUE_ID');
 
     // Initialize all services
-    this.runner = new RunnerService(apiKey, actorURL, timeout);
     this.storage = new StorageService(apiKey, storageURL, timeout);
     this.browser = new BrowserService(apiKey, browserURL, timeout);
     this.captcha = new CaptchaService(apiKey, baseApiURL, timeout);
