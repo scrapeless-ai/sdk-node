@@ -1,10 +1,10 @@
 /**
  * Example: Using Scrapeless SDK's Puppeteer Integration
  *
- * This example demonstrates how to use the PuppeteerBrowser class for browser automation
+ * This example demonstrates how to use the Puppeteer class for browser automation
  * including page navigation and extended page methods
  */
-import { PuppeteerBrowser, log as Log, sleep } from '@scrapeless-ai/sdk';
+import { Puppeteer, log as Log, sleep } from '@scrapeless-ai/sdk';
 const logger = Log.withPrefix('puppeteer-example');
 
 async function runExample() {
@@ -13,7 +13,7 @@ async function runExample() {
   try {
     logger.debug('Starting browser...');
     // Launch browser instance
-    browser = await PuppeteerBrowser.connect({
+    browser = await Puppeteer.connect({
       session_name: 'sdk-puppeteer-example',
       session_ttl: 180,
       proxy_country: 'US',

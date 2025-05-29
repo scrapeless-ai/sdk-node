@@ -203,7 +203,7 @@ describe('ActorService', () => {
     ];
     const result = await actor.bulkSetValue(mockData);
     console.log('Bulk set multiple key-value pairs in a namespace result:', result);
-    expect(result.successful_key_count).not.toBeNull();
+    expect(result.successfulKeyCount).not.toBeNull();
   });
 
   it('should bulk delete multiple keys from a namespace', async () => {
