@@ -1,15 +1,22 @@
-import puppeteer, { Browser, Page } from 'puppeteer-core';
+import puppeteer from 'puppeteer-core';
 import { BaseBrowser, createLogger } from './base';
-import { ScrapelessConfig, LiveURLResponse, AgentCommands, PuppeteerLaunchOptions } from '../types';
+import {
+  ScrapelessConfig,
+  LiveURLResponse,
+  AgentCommands,
+  PuppeteerLaunchOptions,
+  ScrapelessPuppeteerBrowser,
+  ScrapelessPuppeteerPage
+} from '../types';
 
-const logger = createLogger('PuppeteerBrowser');
+const logger = createLogger('Puppeteer');
 
 /**
  * Enhanced Puppeteer browser implementation using Scrapeless API
  * Provides additional automation capabilities and browser control
  */
-export class PuppeteerBrowser extends BaseBrowser {
-  private browser?: Browser;
+export class Puppeteer extends BaseBrowser {
+  private browser?: ScrapelessPuppeteerBrowser;
 
   /**
    * Private constructor - use static connect method instead
@@ -22,18 +29,18 @@ export class PuppeteerBrowser extends BaseBrowser {
    * Create and connect to a Puppeteer browser instance
    * @param options Browser session configuration options
    * @param config Optional Scrapeless configuration
-   * @returns Connected PuppeteerBrowser instance
+   * @returns Connected Puppeteer instance
    * @throws Error if connection fails
    */
-  public static async connect(config: PuppeteerLaunchOptions & ScrapelessConfig = {}): Promise<PuppeteerBrowser> {
-    const browser = new PuppeteerBrowser(config);
+  public static async connect(config: PuppeteerLaunchOptions & ScrapelessConfig = {}): Promise<Puppeteer> {
+    const browser = new Puppeteer(config);
     try {
       const { browserWSEndpoint } = browser.browserService.create(config);
       logger.debug('Connecting to browser: ', { browserWSEndpoint });
-      browser.browser = await puppeteer.connect({
+      browser.browser = (await puppeteer.connect({
         browserWSEndpoint,
         defaultViewport: config.defaultViewport ?? null
-      });
+      })) as ScrapelessPuppeteerBrowser;
 
       logger.info('Successfully connected to browser');
       return browser;
@@ -62,7 +69,7 @@ export class PuppeteerBrowser extends BaseBrowser {
    * @returns Extended Page instance
    * @throws Error if browser is not started
    */
-  public async newPage(): Promise<Page> {
+  public async newPage(): Promise<ScrapelessPuppeteerPage> {
     if (!this.browser) {
       logger.error('Attempted to create page with no browser instance');
       throw new Error('Browser not started');
@@ -82,7 +89,7 @@ export class PuppeteerBrowser extends BaseBrowser {
    * Get the underlying Puppeteer Browser instance
    * @returns The Puppeteer Browser instance
    */
-  public getBrowser(): Browser | undefined {
+  public getBrowser(): ScrapelessPuppeteerBrowser | undefined {
     return this.browser;
   }
 
@@ -90,7 +97,7 @@ export class PuppeteerBrowser extends BaseBrowser {
    * Extend the Page object with additional methods
    * @param page Puppeteer page instance
    */
-  private async extendPageMethods(page: Page): Promise<void> {
+  private async extendPageMethods(page: ScrapelessPuppeteerPage): Promise<void> {
     try {
       const cdpSession = await page.createCDPSession();
       // Cast client to include our custom commands

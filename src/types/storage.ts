@@ -946,6 +946,6 @@ export interface IStorageService {
 }
 
 export interface IBulkSetValueResponse {
-  successful_key_count: number;
-  unsuccessful_keys: string[];
+  successfulKeyCount: number;
+  unsuccessfulKeys: string[];
 }
