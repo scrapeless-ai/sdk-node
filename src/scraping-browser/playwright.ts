@@ -141,7 +141,7 @@ export class Playwright extends BaseBrowser {
       };
 
       // Perform a realistic click operation
-      page.realClick = async function (selector: string, options: { delay?: number } = {}): Promise<void> {
+      page.realClick = async function (selector: string): Promise<void> {
         try {
           await client.send('Agent.click', { selector });
         } catch (error) {
