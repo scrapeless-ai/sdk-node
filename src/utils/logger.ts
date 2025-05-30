@@ -68,21 +68,6 @@ try {
   // If unable to create directory, use console transport only and disable file transport
 }
 
-// Custom format, add code line information
-const getCallerInfo = () => {
-  const trace = stackTrace.get();
-  // Skip current function and logger function, get actual call location
-  for (let i = 0; i < trace.length; i++) {
-    const fileName = trace[i].getFileName();
-    if (fileName && !fileName.includes('logger.ts') && !fileName.includes('node_modules')) {
-      const baseName = path.basename(fileName);
-      const lineNumber = trace[i].getLineNumber();
-      return `${baseName}:${lineNumber}`;
-    }
-  }
-  return 'unknown:0';
-};
-
 // Function to colorize text for console output
 const colorize = (text: string, color: string) => {
   // ANSI color codes
