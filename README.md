@@ -54,6 +54,10 @@ pnpm add @scrapeless-ai/sdk
 
 ## 🚀 Quick Start
 
+### Prerequisite
+
+[Log in](https://app.dashboard.scrapeless.com) to the Scrapeless Dashboard and get the API Key
+
 ### Basic Setup
 
 ```javascript

@@ -1,16 +1,24 @@
-import { chromium, Browser, BrowserContext, Page } from 'playwright-core';
+import { chromium, BrowserContext } from 'playwright-core';
 import { BaseBrowser, createLogger } from './base';
-import { ScrapelessConfig, AgentCommands, LiveURLResponse, PlaywrightLaunchOptions } from '../types';
+import {
+  ScrapelessConfig,
+  AgentCommands,
+  LiveURLResponse,
+  PlaywrightLaunchOptions,
+  ScrapelessPlaywrightBrowser,
+  ScrapelessPlaywrightPage,
+  ScrapelessPlaywrightContext
+} from '../types';
 
-const logger = createLogger('PlaywrightBrowser');
+const logger = createLogger('Playwright');
 
 /**
  * Enhanced Playwright browser implementation using Scrapeless API
  * Provides additional automation capabilities and browser control
  */
-export class PlaywrightBrowser extends BaseBrowser {
-  private browser?: Browser;
-  private context?: BrowserContext;
+export class Playwright extends BaseBrowser {
+  private browser?: ScrapelessPlaywrightBrowser;
+  private context?: ScrapelessPlaywrightContext;
 
   /**
    * Private constructor - use static connect method instead
@@ -23,17 +31,17 @@ export class PlaywrightBrowser extends BaseBrowser {
    * Create and connect to a Playwright browser instance
    * @param options Browser session configuration options
    * @param config Optional Scrapeless configuration
-   * @returns Connected PlaywrightBrowser instance
+   * @returns Connected Playwright instance
    * @throws Error if connection fails
    */
-  public static async connect(config: PlaywrightLaunchOptions & ScrapelessConfig = {}): Promise<PlaywrightBrowser> {
-    const b = new PlaywrightBrowser(config);
+  public static async connect(config: PlaywrightLaunchOptions & ScrapelessConfig = {}): Promise<Playwright> {
+    const b = new Playwright(config);
     try {
       const { browserWSEndpoint } = b.browserService.create(config);
-      // logger.debug('Connecting to browser: ', { browserWSEndpoint });
-      b.browser = await chromium.connectOverCDP({
+      logger.debug('Connecting to browser: ', { browserWSEndpoint });
+      b.browser = (await chromium.connectOverCDP({
         wsEndpoint: browserWSEndpoint
-      });
+      })) as ScrapelessPlaywrightBrowser;
       b.context = b.browser.contexts()[0];
 
       logger.info('Successfully connected to browser');
@@ -66,7 +74,7 @@ export class PlaywrightBrowser extends BaseBrowser {
    * @returns Extended Page instance
    * @throws Error if browser is not started
    */
-  public async newPage(): Promise<Page> {
+  public async newPage(): Promise<ScrapelessPlaywrightPage> {
     if (!this.context) {
       logger.error('Attempted to create page with no browser context');
       throw new Error('Browser context not initialized');
@@ -86,7 +94,7 @@ export class PlaywrightBrowser extends BaseBrowser {
    * Get the underlying Playwright Browser instance
    * @returns The Playwright Browser instance
    */
-  public getBrowser(): Browser | undefined {
+  public getBrowser(): ScrapelessPlaywrightBrowser | undefined {
     return this.browser;
   }
 
@@ -102,7 +110,7 @@ export class PlaywrightBrowser extends BaseBrowser {
    * Extend the Page object with additional methods
    * @param page Playwright page instance
    */
-  private async extendPageMethods(page: Page): Promise<void> {
+  private async extendPageMethods(page: ScrapelessPlaywrightPage): Promise<void> {
     try {
       // Create CDP session for Playwright
       const cdpSession = await page.context().newCDPSession(page);

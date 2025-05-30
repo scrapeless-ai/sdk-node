@@ -1,10 +1,10 @@
 /**
  * Example: Using Scrapeless SDK's Playwright Integration
  *
- * This example demonstrates how to use the PlaywrightBrowser class for browser automation
+ * This example demonstrates how to use the Playwright class for browser automation
  * including page navigation and extended page methods
  */
-import { PlaywrightBrowser, log as Log, sleep } from '@scrapeless-ai/sdk';
+import { Playwright, log as Log, sleep } from '@scrapeless-ai/sdk';
 const logger = Log.withPrefix('playwright-example');
 
 async function runExample() {
@@ -13,7 +13,7 @@ async function runExample() {
   try {
     logger.debug('Starting browser...');
     // Launch browser instance
-    browser = await PlaywrightBrowser.connect({
+    browser = await Playwright.connect({
       session_name: 'sdk-playwright-example',
       session_ttl: 180,
       proxy_country: 'US',
