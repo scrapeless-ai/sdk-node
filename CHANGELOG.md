@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/scrapeless-ai/sdk-node/compare/v0.0.10...v1.0.0) (2025-05-30)
+
+### 📦 Code Refactoring
+
+- remove realFill options parameter ([bb01fa0](https://github.com/scrapeless-ai/sdk-node/commit/bb01fa0783d5ca06de1815dc8c9df175051aea11))
+
+### 🚀 Releases
+
+- v1.0.0 ([58fa3f7](https://github.com/scrapeless-ai/sdk-node/commit/58fa3f7334f36d3e817015a553dbecc7acc2256c))
+- v1.0.0 ([882f8a9](https://github.com/scrapeless-ai/sdk-node/commit/882f8a9d9fa0c350909d4bd66d5f4cea8b7e3072))
+- v1.0.0 ([92381ec](https://github.com/scrapeless-ai/sdk-node/commit/92381ec6ab1a5b5d9f0aedcb99c0cb2c78f0a819))
+
 ### [0.0.10](https://github.com/scrapeless-ai/sdk-node/compare/v0.0.9...v0.0.10) (2025-05-30)
 
 ### 💎 Styles
