@@ -30,7 +30,7 @@ export class PlaywrightBrowser extends BaseBrowser {
     const b = new PlaywrightBrowser(config);
     try {
       const { browserWSEndpoint } = b.browserService.create(config);
-      logger.debug('Connecting to browser: ', { browserWSEndpoint });
+      // logger.debug('Connecting to browser: ', { browserWSEndpoint });
       b.browser = await chromium.connectOverCDP({
         wsEndpoint: browserWSEndpoint
       });

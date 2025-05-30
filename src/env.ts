@@ -19,7 +19,6 @@ export enum ActorEnv {
   SCRAPELESS_CRAWL_API_URL = 'SCRAPELESS_CRAWL_API_URL',
 
   SCRAPELESS_API_KEY = 'SCRAPELESS_API_KEY',
-  SCRAPELESS_USER_ID = 'SCRAPELESS_USER_ID',
   SCRAPELESS_TEAM_ID = 'SCRAPELESS_TEAM_ID',
 
   // Environment variables used by Scrapeless Actor runtime

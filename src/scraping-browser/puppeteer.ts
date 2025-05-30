@@ -29,7 +29,7 @@ export class PuppeteerBrowser extends BaseBrowser {
     const browser = new PuppeteerBrowser(config);
     try {
       const { browserWSEndpoint } = browser.browserService.create(config);
-      logger.debug('Connecting to browser: ', { browserWSEndpoint });
+      // logger.debug('Connecting to browser: ', { browserWSEndpoint });
       browser.browser = await puppeteer.connect({
         browserWSEndpoint,
         defaultViewport: config.defaultViewport ?? null
