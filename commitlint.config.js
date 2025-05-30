@@ -15,6 +15,7 @@ export default {
       2,
       'always',
       [
+        'release',
         'build',
         'chore',
         'ci',
@@ -34,6 +35,11 @@ export default {
       type: {
         description: "Select the type of change that you're committing",
         enum: {
+          release: {
+            description: 'A release',
+            title: 'Releases',
+            emoji: '🚀',
+          },
           feat: {
             description: 'A new feature',
             title: 'Features',

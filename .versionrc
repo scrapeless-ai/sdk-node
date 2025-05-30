@@ -1,6 +1,10 @@
 {
   "types": [
     {
+      "type": "release",
+      "section": "🚀 Releases"
+    },
+    {
       "type": "feat",
       "section": "✨ Features"
     },
