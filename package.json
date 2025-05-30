@@ -105,12 +105,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/scrapeless-ai/scrapeless-sdk-node.git"
+    "url": "git+https://github.com/scrapeless-ai/sdk-node.git"
   },
   "bugs": {
-    "url": "https://github.com/scrapeless-ai/scrapeless-sdk-node/issues"
+    "url": "https://github.com/scrapeless-ai/sdk-node/issues"
   },
-  "homepage": "https://github.com/scrapeless-ai/scrapeless-sdk-node#readme",
+  "homepage": "https://github.com/scrapeless-ai/sdk-node#readme",
   "lint-staged": {
     "*.{ts,js}": [
       "eslint --fix --quiet",

@@ -237,8 +237,8 @@ SDK 包含所有服务和工具的全面测试。
 **快速开始：**
 
 ```bash
-git clone https://github.com/scrapeless-ai/scrapeless-sdk-node.git
-cd scrapeless-sdk-node
+git clone https://github.com/scrapeless-ai/sdk-node.git
+cd sdk-node
 pnpm install
 pnpm test
 pnpm lint
@@ -255,7 +255,7 @@ pnpm format
 
 - 📖 **文档**: [https://docs.scrapeless.com](https://docs.scrapeless.com)
 - 💬 **社区**: [加入我们的 Discord](https://backend.scrapeless.com/app/api/v1/public/links/discord)
-- 🐛 **问题**: [GitHub Issues](https://github.com/scrapeless-ai/scrapeless-sdk-node/issues)
+- 🐛 **问题**: [GitHub Issues](https://github.com/scrapeless-ai/sdk-node/issues)
 - 📧 **邮箱**: [support@scrapeless.com](mailto:support@scrapeless.com)
 
 ## 🏢 关于 Scrapeless

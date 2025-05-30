@@ -241,8 +241,8 @@ We welcome all contributions! For details on how to report issues, submit pull r
 **Quick Start:**
 
 ```bash
-git clone https://github.com/scrapeless-ai/scrapeless-sdk-node.git
-cd scrapeless-sdk-node
+git clone https://github.com/scrapeless-ai/sdk-node.git
+cd sdk-node
 pnpm install
 pnpm test
 pnpm lint
@@ -259,7 +259,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - 📖 **Documentation**: [https://docs.scrapeless.com](https://docs.scrapeless.com)
 - 💬 **Community**: [Join our Discord](https://backend.scrapeless.com/app/api/v1/public/links/discord)
-- 🐛 **Issues**: [GitHub Issues](https://github.com/scrapeless-ai/scrapeless-sdk-node/issues)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/scrapeless-ai/sdk-node/issues)
 - 📧 **Email**: [support@scrapeless.com](mailto:support@scrapeless.com)
 
 ## 🏢 About Scrapeless

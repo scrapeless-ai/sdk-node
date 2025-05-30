@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the Scrapeless Node SDK! This doc
 
 ### 1. Reporting Issues
 
-- Search [existing issues](https://github.com/scrapeless-ai/scrapeless-sdk-node/issues) before opening a new one.
+- Search [existing issues](https://github.com/scrapeless-ai/sdk-node/issues) before opening a new one.
 - Provide a clear and descriptive title and detailed information.
 - Include steps to reproduce, expected behavior, and environment details if relevant.
 
@@ -37,8 +37,8 @@ Thank you for your interest in contributing to the Scrapeless Node SDK! This doc
 
 ```bash
 # Clone the repository
-git clone https://github.com/scrapeless-ai/scrapeless-sdk-node.git
-cd scrapeless-sdk-node
+git clone https://github.com/scrapeless-ai/sdk-node.git
+cd sdk-node
 
 # Install dependencies
 pnpm install
