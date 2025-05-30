@@ -7,7 +7,6 @@ dotenv.config();
 dotenv.config({ path: `.env.${env}` });
 dotenv.config({ path: `.env.${env}.local` });
 
-
 // Export main client class
 export const Scrapeless = ScrapelessClient;
 export type Scrapeless = ScrapelessClient;
