@@ -1,6 +1,6 @@
 {
   "name": "@scrapeless-ai/sdk",
-  "version": "0.0.10",
+  "version": "1.0.0",
   "description": "Node SDK for Scrapeless AI",
   "author": "Scrapeless AI",
   "main": "dist/index.cjs",
