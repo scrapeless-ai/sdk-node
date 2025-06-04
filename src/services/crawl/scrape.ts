@@ -29,20 +29,16 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     const jsonData: any = { url, ...params };
 
     try {
-      let response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
+      const response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
 
       while (true) {
-        if (response.success) {
-          return {
-            success: true,
-            warning: response.warning,
-            error: response.error,
-            ...response.data
-          };
+        const statusResponse = (await this.checkScrapeStatus(response.id)) as ScrapeResponse<zt.infer<T>>;
+        if (statusResponse.status === 'completed') {
+          return statusResponse;
         }
+
         pollInterval = Math.max(pollInterval, 2);
         await new Promise(resolve => setTimeout(resolve, pollInterval * 1000));
-        response = await this.checkScrapeStatus(response.id);
       }
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);

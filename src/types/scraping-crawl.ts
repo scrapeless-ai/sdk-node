@@ -92,10 +92,12 @@ export interface ScrapeParams extends CrawlScrapeOptions {
  * Response interface for scraping operations.
  * Defines the structure of the response received after a scraping operation.
  */
-export interface ScrapeResponse<LLMResult = any> extends ScrapingCrawlDocument<LLMResult> {
+export interface ScrapeResponse<LLMResult = any> {
   success: true;
   warning?: string;
   error?: string;
+  status: 'scraping' | 'completed' | 'failed' | 'cancelled';
+  data: ScrapingCrawlDocument<LLMResult>;
 }
 
 /**
