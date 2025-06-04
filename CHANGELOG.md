@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.0.0...v1.0.1) (2025-06-04)
+
+### 📦 Code Refactoring
+
+- **actor.ts:** 📦 input data is obtained from kv storage by default ([5cdbbef](https://github.com/scrapeless-ai/sdk-node/commit/5cdbbef15dfd819e8a78bac09a25b4eedd73e543))
+
 ## [1.0.0](https://github.com/scrapeless-ai/sdk-node/compare/v0.0.10...v1.0.0) (2025-05-30)
 
 ### 📦 Code Refactoring
