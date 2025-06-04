@@ -18,26 +18,66 @@ export class ScrapeService extends ScrapingCrawlBaseService {
    * Scrape a single URL
    * @param url Target URL to scrape
    * @param params Optional scraping parameters
+   * * @param pollInterval Optional polling interval for job status (s)
    * @returns Scraped data result
    */
   async scrapeUrl<T extends zt.ZodSchema>(
     url: string,
-    params?: ScrapeParams
+    params?: ScrapeParams,
+    pollInterval: number = 2
   ): Promise<ScrapeResponse<zt.infer<T>> | ErrorResponse> {
     const jsonData: any = { url, ...params };
 
     try {
-      const response = await this.request<any>('/v1/scrape', 'POST', jsonData, {});
-      if (response.success) {
-        return {
-          success: true,
-          warning: response.warning,
-          error: response.error,
-          ...response.data
-        };
-      } else {
-        throw new ScrapelessError(`Failed to scrape URL. Error: ${response.error}`, 400);
+      let response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
+
+      while (true) {
+        if (response.success) {
+          return {
+            success: true,
+            warning: response.warning,
+            error: response.error,
+            ...response.data
+          };
+        }
+        pollInterval = Math.max(pollInterval, 2);
+        await new Promise(resolve => setTimeout(resolve, pollInterval * 1000));
+        response = await this.checkScrapeStatus(response.id);
       }
+    } catch (error: any) {
+      throw new ScrapelessError(error.message, error.statusCode || 500);
+    }
+  }
+
+  /**
+   * Scrape a single URL
+   * @param url Target URL to scrape
+   * @param params Optional scraping parameters
+   * @returns Job info
+   */
+  async asyncScrapeUrl(url: string, params?: ScrapeParams): Promise<ScrapeResponse | ErrorResponse> {
+    const jsonData: any = { url, ...params };
+    try {
+      const response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
+      return response;
+    } catch (err: any) {
+      throw new ScrapelessError(err.message, err.statusCode || 500);
+    }
+  }
+
+  /**
+   * Check the status of a crawl job.
+   * @param id Job ID
+   * @returns Scraped data result
+   */
+  async checkScrapeStatus(id: string): Promise<ScrapeResponse<any> | ErrorResponse> {
+    if (!id) {
+      throw new ScrapelessError('No scrape ID provided', 400);
+    }
+    const url = `/api/v1/crawler/scrape/${id}`;
+    try {
+      const response = await this.request<any>(url, 'GET');
+      return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
     }
@@ -60,7 +100,7 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     const jsonData: any = { urls, ignoreInvalidURLs, ...params };
 
     try {
-      const response = await this.request<any>('/v1/batch/scrape', 'POST', jsonData);
+      const response = await this.request<any>('/api/v1/crawler/batch/scrape', 'POST', jsonData);
       if (response.id) {
         return this.monitorJobStatus(response.id, pollInterval);
       } else {
@@ -85,7 +125,7 @@ export class ScrapeService extends ScrapingCrawlBaseService {
   ): Promise<BatchScrapeResponse | ErrorResponse> {
     const jsonData: any = { urls, ignoreInvalidURLs, ...params };
     try {
-      const response = await this.request<any>('/v1/batch/scrape', 'POST', jsonData);
+      const response = await this.request<any>('/api/v1/crawler/batch/scrape', 'POST', jsonData);
       return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);

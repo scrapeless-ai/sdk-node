@@ -17,7 +17,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
    * Crawl a single URL and follow links according to crawl parameters.
    * @param url Target URL to crawl
    * @param params Optional crawl parameters
-   * @param pollInterval Optional polling interval for job status (ms)
+   * @param pollInterval Optional polling interval for job status (s)
    * @returns Crawl result
    */
   async crawlUrl(
@@ -27,7 +27,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
   ): Promise<CrawlStatusResponse | ErrorResponse> {
     const jsonData: any = { url, ...params };
     try {
-      const response = await this.request<any>('/v1/crawl', 'POST', jsonData);
+      const response = await this.request<any>('/api/v1/crawler/crawl', 'POST', jsonData);
       if (response.id) {
         return this.monitorJobStatus(response.id, pollInterval);
       } else {
@@ -47,7 +47,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
   async asyncCrawlUrl(url: string, params?: CrawlParams): Promise<CrawlResponse | ErrorResponse> {
     const jsonData: any = { url, ...params };
     try {
-      const response = await this.request<any>('/v1/crawl', 'POST', jsonData);
+      const response = await this.request<any>('/api/v1/crawler/crawl', 'POST', jsonData);
       return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
@@ -73,7 +73,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
     if (!id) {
       throw new ScrapelessError('No crawl ID provided', 400);
     }
-    let url = nextURL ?? `/v1/crawl/${id}`;
+    let url = nextURL ?? `/api/v1/crawler/crawl/${id}`;
     if (skip !== undefined || limit !== undefined) {
       const params = [];
       if (skip !== undefined) params.push(`skip=${skip}`);
@@ -127,7 +127,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
    */
   async checkCrawlErrors(id: string): Promise<CrawlErrorsResponse | ErrorResponse> {
     try {
-      const response = await this.request<any>(`/v1/crawl/${id}/errors`, 'DELETE');
+      const response = await this.request<any>(`/api/v1/crawler/crawl/${id}/errors`, 'DELETE');
       return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
@@ -141,7 +141,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
    */
   async cancelCrawl(id: string): Promise<ErrorResponse> {
     try {
-      const response = await this.request<any>(`/v1/crawl/${id}`, 'DELETE');
+      const response = await this.request<any>(`/api/v1/crawler/crawl/${id}`, 'DELETE');
       return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);

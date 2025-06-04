@@ -16,7 +16,7 @@ export class ScrapingCrawlBaseService extends BaseService {
   async monitorJobStatus(id: string, pollInterval: number): Promise<CrawlStatusResponse | ErrorResponse> {
     try {
       while (true) {
-        let statusResponse = await this.request<any>(`/v1/crawl/${id}`, 'GET');
+        let statusResponse = await this.request<any>(`/api/v1/crawler/crawl/${id}`, 'GET');
         if (statusResponse.status === 'completed') {
           if ('data' in statusResponse) {
             let data = statusResponse.data;
