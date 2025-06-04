@@ -2,7 +2,7 @@ import { ScrapingCrawlService } from '../services';
 import { ScrapingCrawlBaseService } from '../services/crawl/base';
 import { CrawlService } from '../services/crawl/crawl';
 import { ScrapeService } from '../services/crawl/scrape';
-import { ScrapeParams, CrawlParams, ScrapingCrawlConfig } from '../types/scraping-crawl';
+import { ScrapeParams, CrawlParams, ScrapingCrawlConfig, ErrorResponse, ScrapeResponse } from '../types/scraping-crawl';
 import { getEnv, getEnvWithDefault } from '../env';
 
 interface ScrapelessScrapingCrawl extends CrawlService, ScrapeService, ScrapingCrawlBaseService {}
@@ -25,6 +25,25 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
     const baseUrl = config.baseUrl || getEnvWithDefault('SCRAPELESS_CRAWL_API_URL', 'https://crawl.scrapeless.com');
     const timeout = config.timeout || 0;
     this.service = new ScrapingCrawlService(apiKey, baseUrl, timeout);
+  }
+
+  /**
+   * Asynchronously scrape a single URL (fire-and-forget).
+   * @param url Target URL to scrape
+   * @param params Optional scraping parameters
+   * @returns Job info or error response
+   */
+  asyncScrapeUrl(url: string, params?: ScrapeParams): Promise<ScrapeResponse | ErrorResponse> {
+    return this.service.scrape.asyncScrapeUrl(url, params);
+  }
+
+  /**
+   * Check the status of an asynchronous scrape job.
+   * @param id Job ID
+   * @returns Scrape job status and data or error response
+   */
+  checkScrapeStatus(id: string): Promise<ScrapeResponse<any> | ErrorResponse> {
+    return this.service.scrape.checkScrapeStatus(id);
   }
 
   /**
