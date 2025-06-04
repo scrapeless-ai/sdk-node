@@ -11,6 +11,9 @@ import {
   IQueueUpdateParams
 } from '../types';
 import { getEnv, getEnvWithDefault } from '../env';
+import { log } from '../utils';
+
+const logger = log.withPrefix('Actor');
 
 /**
  * High-level Actor class that integrates various Scrapeless services
@@ -65,11 +68,14 @@ export class Actor {
    * Get actor input data from environment variable
    * @returns Actor input data parsed from environment variable
    */
-  input<T = any>(): T {
-    const inputStr = getEnv('SCRAPELESS_INPUT');
+  async input<T = any>(): Promise<T> {
+    // const inputStr = getEnv('SCRAPELESS_INPUT');
+    const inputStr = await this.getValue('INPUT');
+    logger.debug('input: ', inputStr);
     try {
       return JSON.parse(inputStr) as T;
     } catch (e) {
+      logger.error('Failed to parse input: ', { error: e });
       return inputStr as unknown as T;
     }
   }
