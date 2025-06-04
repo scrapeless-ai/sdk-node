@@ -4,7 +4,8 @@
  * This example demonstrates how to use the Puppeteer class for browser automation
  * including page navigation and extended page methods
  */
-import { Puppeteer, log as Log, sleep } from '@scrapeless-ai/sdk';
+import { Puppeteer, log as Log, sleep } from '../dist/index.js';
+
 const logger = Log.withPrefix('puppeteer-example');
 
 async function runExample() {
@@ -17,7 +18,7 @@ async function runExample() {
       session_name: 'sdk-puppeteer-example',
       session_ttl: 180,
       proxy_country: 'US',
-      proxy_url: 'gw-us.scrapeless.io:8789:29812093F9FC-proxy-country_ANY-r_10m-s_Xsge8XYsRs:2MxGBhJD',
+      proxy_url: 'http://9277031AE836-proxy-country_ANY-r_10m-s_zLyezOnqcF:F2DxIbVE@gw-us.scrapeless.io:8789',
       session_recording: true,
       defaultViewport: null
     });
@@ -27,18 +28,25 @@ async function runExample() {
     const page = await browser.newPage();
     // Navigate to target website
     logger.debug('Navigating to target website...');
-    await page.goto('https://prenotami.esteri.it/', {
-      waitUntil: 'networkidle0'
-    });
-    const { error, liveURL } = await page.liveURL();
-    if (error) {
-      logger.error('Failed to get current page URL:', error);
-    } else {
-      logger.info('Current page URL:', liveURL);
-    }
+    await page.goto('https://www.google.com/', { waitUntil: 'domcontentloaded' });
+    await page.disableCaptchaAutoSolve();
+    await page.goto('https://prenotami.esteri.it/');
+    const userAgent = await page.evaluate(() => navigator.userAgent);
+    logger.debug('User Agent:', userAgent);
+    // await page.goto('https://patrickhlauke.github.io/recaptcha/', { waitUntil: 'domcontentloaded' });
 
-    const email = 'xxx.mel@yqdfw.org';
-    const password = 'xxx*';
+    // await browser.refreshCDPSession()
+
+    // const detected = await page.waitCaptchaDetected();
+    // if (detected.success) {
+    //   logger.info('Captcha detected:', detected.message);
+    // } else {
+    //   logger.error('Failed to detect captcha:', detected.message);
+    //   return;
+    // }
+
+    const email = '19374294169.mel@yqdfw.org';
+    const password = 'niuniuZHOU1986*';
 
     await page.waitForSelector('#login-email');
     await page.waitForSelector('#login-password');
@@ -48,7 +56,24 @@ async function runExample() {
     await page.realFill('#login-email', email);
     await page.realFill('#login-password', password);
 
-    await page.realClick('button[type="submit"]');
+    await sleep(5_000);
+    logger.debug('Solving captcha...');
+    const captcha = await page.solveCaptcha({
+      timeout: 30_000,
+      options: [
+        {
+          type: 'recaptcha',
+          disabled: false
+        }
+      ]
+    });
+    if (captcha.success) {
+      logger.info('Captcha detected:', captcha);
+    } else {
+      logger.error('Failed to detect captcha:', captcha.message);
+      return;
+    }
+    // await page.realClick('button[type="submit"]');
     await sleep(10_000);
   } catch (error) {
     console.error('Error running example:', error);

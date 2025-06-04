@@ -1,9 +1,10 @@
-import { Viewport, Browser, Page } from 'puppeteer-core';
+import { Viewport, Browser, Page, CDPSession } from 'puppeteer-core';
 import { Browser as PlaywrightBrowser, Page as PlaywrightPage, BrowserContext } from 'playwright-core';
 
 export interface ScrapelessPuppeteerBrowser extends Browser {
   page: ScrapelessPuppeteerPage;
   newPage: () => Promise<ScrapelessPuppeteerPage>;
+  refreshCDPSession(): Promise<void>;
 }
 
 // Extend Puppeteer's Page type with our custom methods
@@ -29,6 +30,42 @@ export interface ScrapelessPuppeteerPage extends Page {
    * @throws Error if the element is not found or the operation fails
    */
   realClick(selector: string, options?: { delay?: number }): Promise<void>;
+
+  /**
+   * Set auto solve for a captcha
+   * @param options Optional auto solve configuration
+   * @throws Error if the operation fails
+   */
+  setAutoSolve(options?: SetAutoSolveOptions): Promise<void>;
+
+  /**
+   * Disable auto solve for a captcha
+   * @param options Optional auto solve configuration
+   * @throws Error if the operation fails
+   */
+  disableCaptchaAutoSolve(): Promise<void>;
+
+  /**
+   * Solve a captcha
+   * @param options Optional solve configuration
+   * @throws Error if the operation fails
+   */
+  solveCaptcha(options?: { timeout?: number; options?: CaptchaOptions[] }): Promise<CaptchaCDPResponse>;
+
+  /**
+   * Wait for a captcha to be detected
+   * @param options Optional wait configuration
+   * @throws Error if the operation fails
+   */
+  waitCaptchaDetected(options?: { timeout?: number }): Promise<CaptchaCDPResponse>;
+
+  /**
+   * Wait for a captcha to be solved
+   * @param selector The element selector to wait for
+   * @param options Optional wait configuration
+   * @throws Error if the operation fails
+   */
+  waitCaptchaSolved(options?: { timeout?: number }): Promise<CaptchaCDPResponse>;
 
   // TODO: other CDP
 }
@@ -66,6 +103,27 @@ export interface ScrapelessPlaywrightPage extends PlaywrightPage {
    */
   realClick(selector: string, options?: { delay?: number }): Promise<void>;
 
+  /**
+   * Set auto solve for a captcha
+   * @param options Optional auto solve configuration
+   * @throws Error if the operation fails
+   */
+  setAutoSolve(options?: SetAutoSolveOptions): Promise<void>;
+
+  /**
+   * Wait for a captcha to be detected
+   * @param options Optional wait configuration
+   * @throws Error if the operation fails
+   */
+  waitCaptchaDetected(options?: { timeout?: number }): Promise<CaptchaCDPResponse>;
+
+  /**
+   * Wait for a captcha to be solved
+   * @param options Optional wait configuration
+   * @throws Error if the operation fails
+   */
+  waitCaptchaSolved(options?: { timeout?: number }): Promise<CaptchaCDPResponse>;
+
   // TODO: other CDP
 }
 
@@ -97,6 +155,23 @@ export interface BaseLaunchOptions extends ICreateBrowser {
   defaultViewport?: any | null;
 }
 
+export interface CaptchaCDPResponse {
+  success: boolean;
+  message: string;
+  type?: 'recaptcha' | 'hcaptcha' | 'turnstile' | 'cloudflare';
+  token?: string;
+}
+
+export interface CaptchaOptions {
+  type: 'recaptcha' | 'hcaptcha' | 'turnstile' | 'cloudflare';
+  disabled: boolean;
+}
+
+export interface SetAutoSolveOptions {
+  autoSolve?: boolean;
+  options?: CaptchaOptions[];
+}
+
 /**
  * CDP Agent commands interface
  */
@@ -104,6 +179,18 @@ export type AgentCommands = {
   'Agent.liveURL': () => Promise<{ error?: string; liveURL?: string }>;
   'Agent.click': (params: { selector: string }) => Promise<void>;
   'Agent.type': (params: { selector: string; content: string }) => Promise<void>;
+  'Captcha.setAutoSolve': (params: { autoSolve: boolean; options?: string }) => Promise<void>;
+  'Captcha.solve': (params: { detectTimeout: number; options?: string }) => Promise<CaptchaCDPResponse>;
+};
+
+export type EventCommands = {
+  'Captcha.detected': () => Promise<CaptchaCDPResponse>;
+  'Captcha.solveFinished': () => Promise<CaptchaCDPResponse>;
+  'Captcha.solveFailed': () => Promise<CaptchaCDPResponse>;
+};
+
+export type CustomPuppeteerCDPSession = CDPSession & {
+  send<T extends keyof AgentCommands>(method: T, ...params: Parameters<AgentCommands[T]>): ReturnType<AgentCommands[T]>;
 };
 
 /**

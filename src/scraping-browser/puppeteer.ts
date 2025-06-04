@@ -1,12 +1,15 @@
 import puppeteer from 'puppeteer-core';
 import { BaseBrowser, createLogger } from './base';
 import {
-  ScrapelessConfig,
+  CaptchaCDPResponse,
+  CaptchaOptions,
+  CustomPuppeteerCDPSession,
   LiveURLResponse,
-  AgentCommands,
   PuppeteerLaunchOptions,
+  ScrapelessConfig,
   ScrapelessPuppeteerBrowser,
-  ScrapelessPuppeteerPage
+  ScrapelessPuppeteerPage,
+  SetAutoSolveOptions
 } from '../types';
 
 const logger = createLogger('Puppeteer');
@@ -17,6 +20,10 @@ const logger = createLogger('Puppeteer');
  */
 export class Puppeteer extends BaseBrowser {
   private browser?: ScrapelessPuppeteerBrowser;
+
+  private cdpSession?: CustomPuppeteerCDPSession;
+
+  private currentPage?: ScrapelessPuppeteerPage;
 
   /**
    * Private constructor - use static connect method instead
@@ -76,9 +83,9 @@ export class Puppeteer extends BaseBrowser {
     }
 
     try {
-      const page = await this.browser.newPage();
-      await this.extendPageMethods(page);
-      return page;
+      this.currentPage = await this.browser.newPage();
+      await this.setupCustomPageMethods();
+      return this.currentPage;
     } catch (error) {
       logger.error('Failed to create new page', { error });
       throw new Error(`Failed to create new page: ${error instanceof Error ? error.message : String(error)}`);
@@ -93,25 +100,34 @@ export class Puppeteer extends BaseBrowser {
     return this.browser;
   }
 
+  public refreshCDPSession(): Promise<void> {
+    if (!this.currentPage) {
+      logger.error('Attempted to refresh CDP with no current page');
+      throw new Error('No current page available');
+    }
+    return this.setupCustomPageMethods();
+  }
+
   /**
    * Extend the Page object with additional methods
    * @param page Puppeteer page instance
    */
-  private async extendPageMethods(page: ScrapelessPuppeteerPage): Promise<void> {
+  private async setupCustomPageMethods(): Promise<void> {
+    if (!this.currentPage) {
+      logger.error('Attempted to setup custom page methods with no current page');
+      throw new Error('No current page available');
+    }
     try {
-      const cdpSession = await page.createCDPSession();
-      // Cast client to include our custom commands
-      const client = cdpSession as unknown as {
-        send<T extends keyof AgentCommands>(
-          method: T,
-          ...params: Parameters<AgentCommands[T]>
-        ): ReturnType<AgentCommands[T]>;
-      };
+      this.cdpSession = (await this.currentPage.createCDPSession()) as CustomPuppeteerCDPSession;
 
       // Get current page URL
-      page.liveURL = async function (): Promise<LiveURLResponse> {
+      this.currentPage.liveURL = async (): Promise<LiveURLResponse> => {
+        if (!this.cdpSession) {
+          logger.error(`liveURL: CDP Session is not available`);
+          throw new Error('CDP Session is not available');
+        }
         try {
-          const { error, liveURL } = await client.send('Agent.liveURL');
+          const { error, liveURL } = await this.cdpSession.send('Agent.liveURL');
           return {
             error: error || null,
             liveURL: liveURL || null
@@ -126,9 +142,13 @@ export class Puppeteer extends BaseBrowser {
       };
 
       // Perform a realistic click operation
-      page.realClick = async function (selector: string): Promise<void> {
+      this.currentPage.realClick = async (selector: string): Promise<void> => {
+        if (!this.cdpSession) {
+          logger.error(`realClick: CDP Session is not available`);
+          throw new Error('CDP Session is not available');
+        }
         try {
-          await client.send('Agent.click', { selector });
+          await this.cdpSession.send('Agent.click', { selector });
         } catch (error) {
           logger.error('Error in realClick', { selector, error });
           throw new Error(
@@ -138,13 +158,134 @@ export class Puppeteer extends BaseBrowser {
       };
 
       // Type text into a selector
-      page.realFill = async function (selector: string, text: string): Promise<void> {
+      this.currentPage.realFill = async (selector: string, text: string): Promise<void> => {
+        if (!this.cdpSession) {
+          logger.error(`realFill: CDP Session is not available`);
+          throw new Error('CDP Session is not available');
+        }
         try {
-          await client.send('Agent.type', { selector, content: text });
+          await this.cdpSession.send('Agent.type', { selector, content: text });
         } catch (error) {
           logger.error('Error in type', { selector, error });
           throw new Error(
             `Failed to type text into "${selector}": ${error instanceof Error ? error.message : String(error)}`
+          );
+        }
+      };
+
+      this.currentPage.setAutoSolve = async (options: SetAutoSolveOptions): Promise<void> => {
+        if (!this.cdpSession) {
+          logger.error(`setAutoSolve: CDP Session is not available`);
+          throw new Error('CDP Session is not available');
+        }
+        try {
+          return this.cdpSession.send('Captcha.setAutoSolve', {
+            autoSolve: options.autoSolve ?? true,
+            options: JSON.stringify(options.options)
+          });
+        } catch (error) {
+          logger.error('Error in setAutoSolve', { options, error });
+          throw new Error(`Failed to set auto solve: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      };
+
+      this.currentPage.disableCaptchaAutoSolve = async (): Promise<void> => {
+        if (!this.cdpSession) {
+          logger.error(`disableAutoSolve: CDP Session is not available`);
+          throw new Error('CDP Session is not available');
+        }
+        try {
+          return this.cdpSession.send('Captcha.setAutoSolve', { autoSolve: false });
+        } catch (error) {
+          logger.error('Error in disableCaptchaAutoSolve', { error });
+          throw new Error(
+            `Failed to disable captcha auto solve: ${error instanceof Error ? error.message : String(error)}`
+          );
+        }
+      };
+
+      this.currentPage.solveCaptcha = async (options: {
+        timeout?: number;
+        options?: CaptchaOptions[];
+      }): Promise<CaptchaCDPResponse> => {
+        if (!this.cdpSession) {
+          logger.error(`solveCaptcha: CDP Session is not available`);
+          throw new Error('CDP Session is not available');
+        }
+        try {
+          return this.cdpSession.send('Captcha.solve', {
+            detectTimeout: options.timeout ?? 30_000,
+            options: JSON.stringify(options.options)
+          });
+        } catch (error) {
+          logger.error('Error in solveCaptcha', { options, error });
+          throw new Error(`Failed to solve captcha: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      };
+
+      //=================================== event =================================== //
+      this.currentPage.waitCaptchaDetected = async (options: { timeout?: number }): Promise<CaptchaCDPResponse> => {
+        const { timeout = 30_000 } = options || {};
+        logger.debug(`Waiting for captcha detected with timeout: ${timeout}ms`);
+        try {
+          return Promise.race([
+            new Promise<CaptchaCDPResponse>(resolve => {
+              setTimeout(() => {
+                resolve({ success: false, message: 'Timeout waiting for captcha detected' });
+              }, timeout);
+            }),
+
+            new Promise<CaptchaCDPResponse>(resolve => {
+              if (!this.cdpSession) {
+                logger.error(`waitCaptchaDetected: CDP Session is not available`);
+                throw new Error('CDP Session is not available');
+              }
+              this.cdpSession.on('Captcha.detected', response => {
+                resolve(response as CaptchaCDPResponse);
+              });
+            })
+          ]);
+        } catch (error) {
+          logger.error('Error in waitCaptchaDetected', error);
+          throw new Error(
+            `Failed to wait for captcha detected: ${error instanceof Error ? error.message : String(error)}`
+          );
+        }
+      };
+
+      this.currentPage.waitCaptchaSolved = async (options: { timeout?: number }): Promise<CaptchaCDPResponse> => {
+        const { timeout = 30_000 } = options || {};
+        logger.debug(`Waiting for captcha solved with timeout: ${timeout}ms`);
+        try {
+          return Promise.race([
+            new Promise<CaptchaCDPResponse>(resolve => {
+              if (!this.cdpSession) {
+                logger.error(`waitCaptchaSolved: CDP Session is not available`);
+                throw new Error('CDP Session is not available');
+              }
+              this.cdpSession.on('Captcha.solveFinished', response => {
+                resolve(response as CaptchaCDPResponse);
+              });
+            }),
+            new Promise<CaptchaCDPResponse>(resolve => {
+              if (!this.cdpSession) {
+                logger.error(`waitCaptchaSolved: CDP Session is not available`);
+                throw new Error('CDP Session is not available');
+              }
+              this.cdpSession.on('Captcha.solveFailed', response => {
+                resolve(response as CaptchaCDPResponse);
+              });
+            }),
+            new Promise<CaptchaCDPResponse>(resolve => {
+              setTimeout(() => {
+                resolve({ success: false, message: 'Timeout waiting for captcha solved' });
+              }, timeout);
+            })
+          ]);
+        } catch (error) {
+          logger.error('Error in waitCaptchaSolved', error);
+          throw new Error(
+            `Failed to wait for captcha solved: ${error instanceof Error ? error.message : String(error)}`
           );
         }
       };
