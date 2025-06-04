@@ -100,7 +100,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
         status: response.status,
         total: response.total,
         completed: response.completed,
-        next: getAllData ? undefined : response.next,
+        // next: getAllData ? undefined : response.next,
         expiresAt: new Date(response.expiresAt),
         data: allData
       };
@@ -111,9 +111,9 @@ export class CrawlService extends ScrapingCrawlBaseService {
           error: response.error
         } as ErrorResponse;
       }
-      if (response.next) {
-        (resp as CrawlStatusResponse).next = response.next;
-      }
+      // if (response.next) {
+      //   (resp as CrawlStatusResponse).next = response.next;
+      // }
       return resp;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);

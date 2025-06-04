@@ -2,7 +2,14 @@ import { ScrapingCrawlService } from '../services';
 import { ScrapingCrawlBaseService } from '../services/crawl/base';
 import { CrawlService } from '../services/crawl/crawl';
 import { ScrapeService } from '../services/crawl/scrape';
-import { ScrapeParams, CrawlParams, ScrapingCrawlConfig, ErrorResponse, ScrapeResponse } from '../types/scraping-crawl';
+import {
+  ScrapeParams,
+  CrawlParams,
+  ScrapingCrawlConfig,
+  ErrorResponse,
+  ScrapeResponse,
+  BatchScrapeStatusResponse
+} from '../types/scraping-crawl';
 import { getEnv, getEnvWithDefault } from '../env';
 
 interface ScrapelessScrapingCrawl extends CrawlService, ScrapeService, ScrapingCrawlBaseService {}
@@ -25,6 +32,15 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
     const baseUrl = config.baseUrl || getEnvWithDefault('SCRAPELESS_CRAWL_API_URL', 'https://crawl.scrapeless.com');
     const timeout = config.timeout || 0;
     this.service = new ScrapingCrawlService(apiKey, baseUrl, timeout);
+  }
+
+  /**
+   * Check the status of a batch scrape job.
+   * @param id Batch job ID
+   * @returns Batch scrape status or error response
+   */
+  checkBatchScrapeStatus(id: string): Promise<BatchScrapeStatusResponse | ErrorResponse> {
+    return this.service.scrape.checkBatchScrapeStatus(id);
   }
 
   /**

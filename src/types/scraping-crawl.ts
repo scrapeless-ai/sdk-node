@@ -94,7 +94,7 @@ export interface ScrapeParams extends CrawlScrapeOptions {
  */
 export interface ScrapeResponse<LLMResult = any> {
   success: true;
-  warning?: string;
+  // warning?: string;
   error?: string;
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   data: ScrapingCrawlDocument<LLMResult>;
@@ -153,12 +153,11 @@ export interface BatchScrapeResponse {
  * Provides detailed status of a crawl job including progress and results.
  */
 export interface CrawlStatusResponse {
-  success: true;
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   completed: number;
   total: number;
   expiresAt: Date;
-  next?: string;
+  // next?: string;
   data: ScrapingCrawlDocument<undefined>[];
 }
 
@@ -167,12 +166,12 @@ export interface CrawlStatusResponse {
  * Provides detailed status of a batch scrape job including progress and results.
  */
 export interface BatchScrapeStatusResponse {
-  success: true;
+  // success: true;
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   completed: number;
   total: number;
-  expiresAt: Date;
-  next?: string;
+  // expiresAt: Date;
+  // next?: string;
   data: ScrapingCrawlDocument<undefined>[];
 }
 
