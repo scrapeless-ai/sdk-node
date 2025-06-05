@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.1.1...v1.2.0) (2025-06-05)
+
+### ✨ Features
+
+- ✨add Captcha CDP commands ([a5aec47](https://github.com/scrapeless-ai/sdk-node/commit/a5aec470124e45ab0ba7cf6b06fd5145af7ed701))
+
+### 📦 Code Refactoring
+
+- **browser:** refactor puppeteer and playwright custom methods [#7](https://github.com/scrapeless-ai/sdk-node/issues/7) ([6935176](https://github.com/scrapeless-ai/sdk-node/commit/69351766f871830ae9f85f85337103cb2ba93743))
+- **logger.ts:** clear expired code ([2c1d66c](https://github.com/scrapeless-ai/sdk-node/commit/2c1d66c0e964f8e8dc08fd4a5054748ff49e87c0))
+- **puppeteer.ts:** refactor puppeteer CDP commands ([a5e484c](https://github.com/scrapeless-ai/sdk-node/commit/a5e484c98980a2c8ecba7a7f445aa7d7019fd13c))
+
+### 📚 Documentation
+
+- update README.md ([9d80394](https://github.com/scrapeless-ai/sdk-node/commit/9d80394757c21b8e0e94e52f5b2c961e960bd82b))
+
 ### [1.1.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.1.0...v1.1.1) (2025-06-05)
 
 ### 🐛 Bug Fixes
