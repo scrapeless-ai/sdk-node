@@ -78,7 +78,7 @@ SCRAPELESS_BASE_API_URL=https://api.scrapeless.com
 SCRAPELESS_ACTOR_API_URL=https://actor.scrapeless.com
 SCRAPELESS_STORAGE_API_URL=https://storage.scrapeless.com
 SCRAPELESS_BROWSER_API_URL=https://browser.scrapeless.com
-SCRAPELESS_CRAWL_API_URL=https://crawl.scrapeless.com
+SCRAPELESS_CRAWL_API_URL=https://api.scrapeless.com
 ```
 
 ## 📖 使用示例

@@ -43,7 +43,7 @@ export class ScrapelessClient {
     const browserURL =
       config.browserApiUrl || getEnvWithDefault('SCRAPELESS_BROWSER_API_URL', 'https://browser.scrapeless.com');
     const scrapingCrawlURL =
-      config.scrapingCrawlApiUrl || getEnvWithDefault('SCRAPELESS_CRAWL_API_URL', 'https://crawl.scrapeless.com');
+      config.scrapingCrawlApiUrl || getEnvWithDefault('SCRAPELESS_CRAWL_API_URL', 'https://api.scrapeless.com');
 
     if (!apiKey) {
       throw new ScrapelessError(
