@@ -20,18 +20,14 @@ export class CrawlService extends ScrapingCrawlBaseService {
    * @param pollInterval Optional polling interval for job status (s)
    * @returns Crawl result
    */
-  async crawlUrl(
-    url: string,
-    params?: CrawlParams,
-    pollInterval: number = 2
-  ): Promise<CrawlStatusResponse | ErrorResponse> {
+  async crawlUrl(url: string, params?: CrawlParams, pollInterval: number = 2): Promise<CrawlStatusResponse> {
     const jsonData: any = { url, ...params };
     try {
       const response = await this.request<any>('/api/v1/crawler/crawl', 'POST', jsonData);
       if (response.id) {
         return this.monitorJobStatus(response.id, pollInterval);
       } else {
-        throw new ScrapelessError('Failed to start crawl job', 400);
+        throw new ScrapelessError('Failed to start a crawl job', 400);
       }
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
@@ -44,7 +40,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
    * @param params Optional crawl parameters
    * @returns Job info
    */
-  async asyncCrawlUrl(url: string, params?: CrawlParams): Promise<CrawlResponse | ErrorResponse> {
+  async asyncCrawlUrl(url: string, params?: CrawlParams): Promise<CrawlResponse> {
     const jsonData: any = { url, ...params };
     try {
       const response = await this.request<any>('/api/v1/crawler/crawl', 'POST', jsonData);
@@ -57,33 +53,17 @@ export class CrawlService extends ScrapingCrawlBaseService {
   /**
    * Check the status of a crawl job.
    * @param id Job ID
-   * @param getAllData Whether to fetch all data
-   * @param nextURL Pagination cursor for next page
-   * @param skip Number of records to skip
-   * @param limit Maximum number of records to return
    * @returns Crawl job status and data
    */
-  async checkCrawlStatus(
-    id?: string,
-    getAllData = false,
-    nextURL?: string,
-    skip?: number,
-    limit?: number
-  ): Promise<CrawlStatusResponse | ErrorResponse> {
+  async checkCrawlStatus(id?: string): Promise<CrawlStatusResponse> {
     if (!id) {
       throw new ScrapelessError('No crawl ID provided', 400);
     }
-    let url = nextURL ?? `/api/v1/crawler/crawl/${id}`;
-    if (skip !== undefined || limit !== undefined) {
-      const params = [];
-      if (skip !== undefined) params.push(`skip=${skip}`);
-      if (limit !== undefined) params.push(`limit=${limit}`);
-      url += `?${params.join('&')}`;
-    }
+    const url = `/api/v1/crawler/crawl/${id}`;
     try {
       const response = await this.request<any>(url, 'GET');
       let allData = response.data;
-      if (getAllData && response.status === 'completed') {
+      if (response.status === 'completed') {
         let statusData = response;
         if ('data' in statusData) {
           let data = statusData.data;
@@ -95,13 +75,11 @@ export class CrawlService extends ScrapingCrawlBaseService {
           allData = data;
         }
       }
-      let resp: CrawlStatusResponse | ErrorResponse = {
+      let resp: CrawlStatusResponse = {
         success: response.success,
         status: response.status,
         total: response.total,
         completed: response.completed,
-        // next: getAllData ? undefined : response.next,
-        expiresAt: new Date(response.expiresAt),
         data: allData
       };
       if (!response.success && response.error) {
@@ -109,11 +87,8 @@ export class CrawlService extends ScrapingCrawlBaseService {
           ...resp,
           success: false,
           error: response.error
-        } as ErrorResponse;
+        };
       }
-      // if (response.next) {
-      //   (resp as CrawlStatusResponse).next = response.next;
-      // }
       return resp;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
@@ -125,7 +100,7 @@ export class CrawlService extends ScrapingCrawlBaseService {
    * @param id Job ID
    * @returns List of crawl errors
    */
-  async checkCrawlErrors(id: string): Promise<CrawlErrorsResponse | ErrorResponse> {
+  async checkCrawlErrors(id: string): Promise<CrawlErrorsResponse> {
     try {
       const response = await this.request<any>(`/api/v1/crawler/crawl/${id}/errors`, 'DELETE');
       return response;

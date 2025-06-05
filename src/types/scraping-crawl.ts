@@ -56,18 +56,13 @@ export interface ScrapingCrawlDocumentMetadata {
  * Represents a document retrieved or processed by ScrapingCrawl.
  */
 export interface ScrapingCrawlDocument<T = any> {
-  url?: string;
   markdown?: string;
   html?: string;
   rawHtml?: string;
   links?: string[];
   extract?: T;
-  json?: T;
   screenshot?: string;
   metadata?: ScrapingCrawlDocumentMetadata;
-  // v1 search only
-  title?: string;
-  description?: string;
 }
 
 /**
@@ -92,9 +87,8 @@ export interface ScrapeParams extends CrawlScrapeOptions {
  * Response interface for scraping operations.
  * Defines the structure of the response received after a scraping operation.
  */
-export interface ScrapeResponse<LLMResult = any> {
+export interface ScrapeStatusResponse<LLMResult = any> {
   success: true;
-  // warning?: string;
   error?: string;
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   data: ScrapingCrawlDocument<LLMResult>;
@@ -126,26 +120,34 @@ export interface CrawlParams {
 }
 
 /**
- * Response interface for crawling operations.
- * Defines the structure of the response received after initiating a crawl.
+ * Response interface for scrape operations.
+ * Defines the structure of the response received after initiating a scrape.
  */
-export interface CrawlResponse {
+export interface ScrapeResponse {
   id?: string;
-  url?: string;
   success: true;
   error?: string;
 }
 
 /**
  * Response interface for batch scrape operations.
- * Defines the structure of the response received after initiating a crawl.
+ * Defines the structure of the response received after initiating a batch scrape.
  */
 export interface BatchScrapeResponse {
   id?: string;
-  url?: string;
   success: true;
   error?: string;
   invalidURLs?: string[];
+}
+
+/**
+ * Response interface for crawling operations.
+ * Defines the structure of the response received after initiating a crawl.
+ */
+export interface CrawlResponse {
+  id?: string;
+  success: true;
+  error?: string;
 }
 
 /**
@@ -153,12 +155,12 @@ export interface BatchScrapeResponse {
  * Provides detailed status of a crawl job including progress and results.
  */
 export interface CrawlStatusResponse {
+  success: boolean;
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   completed: number;
   total: number;
-  expiresAt: Date;
-  // next?: string;
   data: ScrapingCrawlDocument<undefined>[];
+  error?: string;
 }
 
 /**
@@ -166,13 +168,12 @@ export interface CrawlStatusResponse {
  * Provides detailed status of a batch scrape job including progress and results.
  */
 export interface BatchScrapeStatusResponse {
-  // success: true;
+  success: true;
   status: 'scraping' | 'completed' | 'failed' | 'cancelled';
   completed: number;
   total: number;
-  // expiresAt: Date;
-  // next?: string;
   data: ScrapingCrawlDocument<undefined>[];
+  error?: string;
 }
 
 /**

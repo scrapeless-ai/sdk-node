@@ -6,9 +6,9 @@ import {
   ScrapeParams,
   CrawlParams,
   ScrapingCrawlConfig,
-  ErrorResponse,
-  ScrapeResponse,
-  BatchScrapeStatusResponse
+  ScrapeStatusResponse,
+  BatchScrapeStatusResponse,
+  ScrapeResponse
 } from '../types/scraping-crawl';
 import { getEnv, getEnvWithDefault } from '../env';
 
@@ -29,37 +29,9 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
    */
   constructor(config: ScrapingCrawlConfig) {
     const apiKey = config.apiKey || getEnv('SCRAPELESS_API_KEY');
-    const baseUrl = config.baseUrl || getEnvWithDefault('SCRAPELESS_CRAWL_API_URL', 'https://crawl.scrapeless.com');
+    const baseUrl = config.baseUrl || getEnvWithDefault('SCRAPELESS_CRAWL_API_URL', 'https://api.scrapeless.com');
     const timeout = config.timeout || 0;
     this.service = new ScrapingCrawlService(apiKey, baseUrl, timeout);
-  }
-
-  /**
-   * Check the status of a batch scrape job.
-   * @param id Batch job ID
-   * @returns Batch scrape status or error response
-   */
-  checkBatchScrapeStatus(id: string): Promise<BatchScrapeStatusResponse | ErrorResponse> {
-    return this.service.scrape.checkBatchScrapeStatus(id);
-  }
-
-  /**
-   * Asynchronously scrape a single URL (fire-and-forget).
-   * @param url Target URL to scrape
-   * @param params Optional scraping parameters
-   * @returns Job info or error response
-   */
-  asyncScrapeUrl(url: string, params?: ScrapeParams): Promise<ScrapeResponse | ErrorResponse> {
-    return this.service.scrape.asyncScrapeUrl(url, params);
-  }
-
-  /**
-   * Check the status of an asynchronous scrape job.
-   * @param id Job ID
-   * @returns Scrape job status and data or error response
-   */
-  checkScrapeStatus(id: string): Promise<ScrapeResponse<any> | ErrorResponse> {
-    return this.service.scrape.checkScrapeStatus(id);
   }
 
   /**
@@ -70,6 +42,25 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
    */
   scrapeUrl(url: string, params?: ScrapeParams) {
     return this.service.scrape.scrapeUrl(url, params);
+  }
+
+  /**
+   * Asynchronously scrape a single URL (fire-and-forget).
+   * @param url Target URL to scrape
+   * @param params Optional scraping parameters
+   * @returns Job info or error response
+   */
+  asyncScrapeUrl(url: string, params?: ScrapeParams): Promise<ScrapeResponse> {
+    return this.service.scrape.asyncScrapeUrl(url, params);
+  }
+
+  /**
+   * Check the status of an asynchronous scrape job.
+   * @param id Job ID
+   * @returns Scrape job status and data or error response
+   */
+  checkScrapeStatus(id: string): Promise<ScrapeStatusResponse<any>> {
+    return this.service.scrape.checkScrapeStatus(id);
   }
 
   /**
@@ -96,6 +87,15 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
   }
 
   /**
+   * Check the status of a batch scrape job.
+   * @param id Batch job ID
+   * @returns Batch scrape status or error response
+   */
+  checkBatchScrapeStatus(id: string): Promise<BatchScrapeStatusResponse> {
+    return this.service.scrape.checkBatchScrapeStatus(id);
+  }
+
+  /**
    * Crawl a single URL and follow links according to crawl parameters.
    * @param url Target URL to crawl
    * @param params Optional crawl parameters
@@ -119,14 +119,10 @@ export class ScrapingCrawl implements Omit<ScrapelessScrapingCrawl, 'request'> {
   /**
    * Check the status of a crawl job.
    * @param id Job ID
-   * @param getAllData Whether to fetch all data
-   * @param nextURL Pagination cursor for next page
-   * @param skip Number of records to skip
-   * @param limit Maximum number of records to return
    * @returns Crawl job status and data
    */
-  checkCrawlStatus(id?: string, getAllData?: boolean, nextURL?: string, skip?: number, limit?: number) {
-    return this.service.crawl.checkCrawlStatus(id, getAllData, nextURL, skip, limit);
+  checkCrawlStatus(id?: string) {
+    return this.service.crawl.checkCrawlStatus(id);
   }
 
   /**

@@ -3,9 +3,9 @@ import * as zt from 'zod';
 import {
   BatchScrapeResponse,
   BatchScrapeStatusResponse,
-  ErrorResponse,
   ScrapeParams,
-  ScrapeResponse
+  ScrapeResponse,
+  ScrapeStatusResponse
 } from '../../types/scraping-crawl';
 import { ScrapingCrawlBaseService } from './base';
 
@@ -25,15 +25,18 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     url: string,
     params?: ScrapeParams,
     pollInterval: number = 2
-  ): Promise<ScrapeResponse<zt.infer<T>> | ErrorResponse> {
+  ): Promise<ScrapeStatusResponse<zt.infer<T>>> {
     const jsonData: any = { url, ...params };
 
     try {
       const response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
+      if (!response.id) {
+        throw new ScrapelessError('Failed to start a scrape job', 400);
+      }
 
       while (true) {
-        const statusResponse = (await this.checkScrapeStatus(response.id)) as ScrapeResponse<zt.infer<T>>;
-        if (statusResponse.status === 'completed') {
+        const statusResponse = (await this.checkScrapeStatus(response.id)) as ScrapeStatusResponse<zt.infer<T>>;
+        if (statusResponse.status !== 'scraping') {
           return statusResponse;
         }
 
@@ -51,7 +54,7 @@ export class ScrapeService extends ScrapingCrawlBaseService {
    * @param params Optional scraping parameters
    * @returns Job info
    */
-  async asyncScrapeUrl(url: string, params?: ScrapeParams): Promise<ScrapeResponse | ErrorResponse> {
+  async asyncScrapeUrl(url: string, params?: ScrapeParams): Promise<ScrapeResponse> {
     const jsonData: any = { url, ...params };
     try {
       const response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
@@ -66,7 +69,7 @@ export class ScrapeService extends ScrapingCrawlBaseService {
    * @param id Job ID
    * @returns Scraped data result
    */
-  async checkScrapeStatus(id: string): Promise<ScrapeResponse<any> | ErrorResponse> {
+  async checkScrapeStatus(id: string): Promise<ScrapeStatusResponse<any>> {
     if (!id) {
       throw new ScrapelessError('No scrape ID provided', 400);
     }
@@ -92,15 +95,18 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     params?: ScrapeParams,
     pollInterval: number = 2,
     ignoreInvalidURLs?: boolean
-  ): Promise<BatchScrapeStatusResponse | ErrorResponse> {
+  ): Promise<BatchScrapeStatusResponse> {
     const jsonData: any = { urls, ignoreInvalidURLs, ...params };
 
     try {
-      const response = await this.request<any>('/api/v1/crawler/batch/scrape', 'POST', jsonData);
+      const response = await this.request<any>('/api/v1/crawler/scrape/batch', 'POST', jsonData);
+      if (!response.id) {
+        throw new ScrapelessError('Failed to start a batch scrape job', 400);
+      }
 
       while (true) {
-        const statusResponse = (await this.checkBatchScrapeStatus(response.id)) as BatchScrapeStatusResponse;
-        if (statusResponse.status === 'completed') {
+        const statusResponse = await this.checkBatchScrapeStatus(response.id);
+        if (statusResponse.status !== 'scraping') {
           return statusResponse;
         }
         pollInterval = Math.max(pollInterval, 2);
@@ -122,10 +128,10 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     urls: string[],
     params?: ScrapeParams,
     ignoreInvalidURLs?: boolean
-  ): Promise<BatchScrapeResponse | ErrorResponse> {
+  ): Promise<BatchScrapeResponse> {
     const jsonData: any = { urls, ignoreInvalidURLs, ...params };
     try {
-      const response = await this.request<any>('/api/v1/crawler/batch/scrape', 'POST', jsonData);
+      const response = await this.request<any>('/api/v1/crawler/scrape/batch', 'POST', jsonData);
       return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
@@ -137,7 +143,7 @@ export class ScrapeService extends ScrapingCrawlBaseService {
    * @param id Job ID
    * @returns Scraped data result
    */
-  async checkBatchScrapeStatus(id: string): Promise<BatchScrapeStatusResponse | ErrorResponse> {
+  async checkBatchScrapeStatus(id: string): Promise<BatchScrapeStatusResponse> {
     if (!id) {
       throw new ScrapelessError('No scrape ID provided', 400);
     }
