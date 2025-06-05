@@ -10,13 +10,20 @@ export const createLogger = (prefix: string) => Log.withPrefix(prefix);
  * Base browser service configuration
  */
 export abstract class BaseBrowser {
-  protected browserService: BrowserService;
+  protected browserService?: BrowserService;
 
   /**
-   * Create a browser instance with Scrapeless configuration
+   * Base constructor for browser implementations
+   */
+  constructor() {
+    // Base initialization if needed
+  }
+
+  /**
+   * Initialize browser service with Scrapeless configuration
    * @param config Optional Scrapeless configuration
    */
-  protected constructor(config?: ScrapelessConfig) {
+  protected initBrowserService(config?: ScrapelessConfig) {
     const apiKey = config?.apiKey || getEnv('SCRAPELESS_API_KEY');
     const browserURL =
       config?.baseApiUrl || getEnvWithDefault('SCRAPELESS_BROWSER_API_URL', 'https://browser.scrapeless.com');

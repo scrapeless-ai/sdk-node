@@ -27,7 +27,7 @@ async function main() {
   let browser;
   try {
     // Get input parameters
-    const input = actor.input();
+    const input = await actor.input();
     log.debug(`Ready input: {0}`, input);
 
     // Use browser service for web scraping

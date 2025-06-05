@@ -42,14 +42,12 @@ async function runActorExample() {
     console.log('Actor initialized');
 
     // 2. Get input data
-    const input = actor.input();
+    const input = await actor.input();
     console.log('Actor input data:', input);
 
     // 3. Dataset operations
     console.log('\n--- Dataset Operations ---');
     try {
-      const datasetId = process.env.SCRAPELESS_DATASET_ID;
-
       // Add items to dataset
       const items = input.keywords.map(keyword => ({
         keyword,
@@ -76,8 +74,6 @@ async function runActorExample() {
     // 4. KV storage operations
     console.log('\n--- KV Storage Operations ---');
     try {
-      const namespaceId = process.env.SCRAPELESS_KV_NAMESPACE_ID;
-
       // Store data
       await actor.setValue({
         key: 'last_run',
@@ -106,8 +102,6 @@ async function runActorExample() {
     // 5. Object storage operations
     console.log('\n--- Object Storage Operations ---');
     try {
-      const bucketId = process.env.SCRAPELESS_BUCKET_ID;
-
       // In a real environment, you can upload files here
       // Due to example environment limitations, only showing the code
       /*
@@ -129,8 +123,6 @@ async function runActorExample() {
     // 6. Queue operations
     console.log('\n--- Queue Operations ---');
     try {
-      const queueId = process.env.SCRAPELESS_QUEUE_ID;
-
       // Push message to queue
       const pushResult = await actor.pushMessage({
         body: {

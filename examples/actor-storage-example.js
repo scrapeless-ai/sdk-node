@@ -19,7 +19,7 @@ async function runActorExample() {
     const actor = new Actor();
 
     // Get input data from environment
-    const input = actor.input();
+    const input = await actor.input();
     console.log('Actor input:', input);
 
     // Dataset operations

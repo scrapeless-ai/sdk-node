@@ -2,8 +2,6 @@ import winston from 'winston';
 import 'winston-daily-rotate-file';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as os from 'os';
-import * as stackTrace from 'stack-trace';
 import Transport from 'winston-transport';
 
 // Log level definitions
@@ -39,18 +37,6 @@ const PREFIX_COLORS = ['cyan', 'magenta', 'blue', 'yellow', 'green'];
 // Get safe default log directory
 const getDefaultLogDir = () => {
   return './logs';
-  // // Use relative directory ./logs in test environment
-  // if (process.env.NODE_ENV === 'test') {
-  // }
-  //
-  // try {
-  //   // Try to use system temp directory
-  //   const tempDir = os.tmpdir();
-  //   return path.join(tempDir, 'scrapeless-logs');
-  // } catch (e) {
-  //   // If unable to get temp directory, use logs folder in current directory
-  //   return './logs';
-  // }
 };
 
 // Get configuration from environment variables

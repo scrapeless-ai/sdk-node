@@ -68,15 +68,12 @@ export class Actor {
    * Get actor input data from environment variable
    * @returns Actor input data parsed from environment variable
    */
-  async input<T = any>(): Promise<T> {
-    // const inputStr = getEnv('SCRAPELESS_INPUT');
-    const inputStr = await this.getValue('INPUT');
-    logger.debug('input: ', inputStr);
+  async input() {
     try {
-      return JSON.parse(inputStr) as T;
-    } catch (e) {
-      logger.error('Failed to parse input: ', { error: e });
-      return inputStr as unknown as T;
+      const inputStr = await this.getValue('INPUT');
+      return JSON.parse(inputStr);
+    } catch {
+      return {};
     }
   }
 
