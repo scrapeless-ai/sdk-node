@@ -6,7 +6,7 @@
 
 **[English](README.md) | [中文文档](README-zh.md)**
 
-The official Node.js SDK for [Scrapeless AI](https://scrapeless.com) - a powerful web scraping and browser automation platform that helps you extract data from any website at scale.
+The official Node.js SDK for [Scrapeless AI](https://scrapeless.com) - End-to-End Data Infrastructure for AI Developers & Enterprises.
 
 ## 📑 Table of Contents
 
@@ -24,12 +24,14 @@ The official Node.js SDK for [Scrapeless AI](https://scrapeless.com) - a powerfu
 
 ## 🌟 Features
 
-- **Browser Automation**: Remote browser sessions with Playwright and Puppeteer support
-- **Web Scraping**: Extract data from any website with intelligent parsing
-- **SERP Scraping**: Extract search engine results with high accuracy
-- **Proxy Management**: Built-in proxy rotation and geo-targeting
-- **Actor System**: Run custom automation scripts in the cloud
-- **Storage Solutions**: Persistent data storage for your scraping projects
+- **Browser**: Advanced browser session management supporting Playwright and Puppeteer frameworks, with configurable anti-detection capabilities (e.g., fingerprint spoofing, CAPTCHA solving) and extensible automation workflows.
+- **Universal Scraping API**: web interaction and data extraction with full browser capabilities. Execute JavaScript rendering, simulate user interactions (clicks, scrolls), bypass anti-scraping measures, and export structured data in formats.
+- **Crawl**: Extract data from single pages or traverse entire domains, exporting in formats including Markdown, JSON, HTML, screenshots, and links.
+- **Scraping API**: Direct data extraction APIs for websites (e.g., e-commerce, travel platforms). Retrieve structured product information, pricing, and reviews with pre-built connectors.
+- **Deep SerpApi**: Google SERP data extraction API. Fetch organic results, news, images, and more with customizable parameters and real-time updates.
+- **Proxies**: Geo-targeted proxy network with 195+ countries. Optimize requests for better success rates and regional data access.
+- **Actor**: Deploy custom crawling and data processing workflows at scale with built-in scheduling and resource management.
+- **Storage Solutions**: Scalable data storage solutions for crawled content, supporting seamless integration with cloud services and databases.
 - **TypeScript Support**: Full TypeScript definitions for better development experience
 
 ## 📦 Installation
@@ -87,9 +89,9 @@ SCRAPELESS_CRAWL_API_URL=https://crawl.scrapeless.com
 
 ## 📖 Usage Examples
 
-### Browser Automation
+### Browser
 
-Create remote browser sessions and control them with Puppeteer or Playwright:
+Advanced browser session management supporting Playwright and Puppeteer frameworks, with configurable anti-detection capabilities (e.g., fingerprint spoofing, CAPTCHA solving) and extensible automation workflows:
 
 ```javascript
 import { Scrapeless } from '@scrapeless-ai/sdk';
@@ -116,24 +118,24 @@ console.log(await page.title());
 await browser.close();
 ```
 
-### Web Scraping
+### Scraping API
 
-Extract data from websites with intelligent parsing:
+Direct data extraction APIs for websites (e.g., e-commerce, travel platforms). Retrieve structured product information, pricing, and reviews with pre-built connectors:
 
 ```javascript
 const result = await client.scraping.scrape({
-  actor: 'scraper.google.search',
+  actor: 'scraper.shopee',
   input: {
-    q: 'nike site:www.nike.com'
+    "url": "https://shopee.tw/a-i.10228173.24803858474"
   }
 });
 
 console.log(result.data);
 ```
 
-### SERP Scraping
+### Deep SerpApi
 
-Extract search engine results:
+Google SERP data extraction API. Fetch organic results, news, images, and more with customizable parameters and real-time updates:
 
 ```javascript
 const results = await client.deepserp.scrape({
@@ -146,9 +148,9 @@ const results = await client.deepserp.scrape({
 console.log(results);
 ```
 
-### Actor System
+### Actor
 
-Run custom automation scripts in the cloud:
+Deploy custom crawling and data processing workflows at scale with built-in scheduling and resource management:
 
 ```javascript
 // Run an actor
@@ -185,14 +187,14 @@ interface ScrapelessConfig {
 
 The SDK provides the following services through the main client:
 
-- `client.browser` - Browser session management
-- `client.scraping` - Web scraping and data extraction
+- `client.browser` - browser automation with Playwright/Puppeteer support, anti-detection tools (fingerprinting, CAPTCHA solving), and extensible workflows.
+- `client.universal` - JS rendering, user simulation (clicks/scrolls), anti-block bypass, and structured data export.
+- `client.scrapingCrawl` - Recursive site crawling with multi-format export (Markdown, JSON, HTML, screenshots, links).
+- `client.scraping` - Pre-built connectors for sites (e.g., e-commerce, travel) to extract product data, pricing, and reviews.
 - `client.deepserp` - Search engine results extraction
-- `client.universal` - Universal data extraction
 - `client.proxies` - Proxy management
-- `client.actor` - Actor system for custom automation
+- `client.actor` - Scalable workflow automation with built-in scheduling and resource management.
 - `client.storage` - Data storage solutions
-- `client.scrapingCrawl` - Website crawling
 
 ### Error Handling
 
@@ -215,14 +217,14 @@ try {
 
 Check out the [`examples`](./examples) directory for comprehensive usage examples:
 
-- [Browser Automation](./examples/browser-example.js)
+- [Browser](./examples/browser-example.js)
 - [Playwright Integration](./examples/playwright-example.js)
 - [Puppeteer Integration](./examples/puppeteer-example.js)
-- [Web Scraping](./examples/scraping-example.js)
-- [Actor System](./examples/actor-example.js)
+- [Scraping API](./examples/scraping-example.js)
+- [Actor](./examples/actor-example.js)
 - [Storage Usage](./examples/storage-example.js)
-- [Proxy Management](./examples/proxies-example.js)
-- [SERP Scraping](./examples/deepserp-example.js)
+- [Proxies](./examples/proxies-example.js)
+- [Deep SerpApi](./examples/deepserp-example.js)
 
 ## 🧪 Testing
 
