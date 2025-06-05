@@ -4,27 +4,29 @@
  * This example demonstrates how to use the Playwright class for browser automation
  * including page navigation and extended page methods
  */
-import { Playwright, log as Log, sleep } from '@scrapeless-ai/sdk';
+import { Playwright, createPlaywrightCDPSession, log as Log, sleep } from '@scrapeless-ai/sdk';
 const logger = Log.withPrefix('playwright-example');
 
 async function runExample() {
-  let browser;
+  logger.debug('Starting browser...');
+  // Launch browser instance
 
+  const browser = await Playwright.connect({
+    session_name: 'sdk-playwright-example',
+    session_ttl: 180,
+    proxy_country: 'US',
+    // proxy_url: '',
+    session_recording: true,
+    viewport: null
+  });
   try {
-    logger.debug('Starting browser...');
-    // Launch browser instance
-    browser = await Playwright.connect({
-      session_name: 'sdk-playwright-example',
-      session_ttl: 180,
-      proxy_country: 'US',
-      // proxy_url: '',
-      session_recording: true,
-      viewport: null
-    });
-
+    const context = browser.contexts()[0];
     logger.debug('Creating new page...');
     // Create a new page
-    const page = await browser.newPage();
+    const page = await context.newPage();
+
+    const cdpSession = await createPlaywrightCDPSession(context, page);
+    await cdpSession.disableCaptchaAutoSolve();
 
     // Navigate to target website
     logger.debug('Navigating to target website...');
@@ -48,23 +50,22 @@ async function runExample() {
 
     await sleep(10_000);
 
-    await page.realFill('#login-email', email);
-    await page.realFill('#login-password', password);
-
-    // Use realClick for more realistic interaction
-    await page.realClick('button[type="submit"]');
+    await cdpSession.realFill('#login-email', email);
+    await cdpSession.realFill('#login-password', password);
 
     // Wait to observe the result
-    await sleep(10_000);
+    await sleep(5_000);
 
-    // Demonstrate waitForReady (Playwright-specific method)
-    logger.debug('Demonstrating waitForReady method...');
-    try {
-      await page.waitForReady('a.button', 5000);
-      logger.info('Button is ready for interaction');
-    } catch {
-      logger.warn('Could not find button or timed out waiting for it');
+    logger.debug('Solving captcha...');
+    const captcha = await cdpSession.solveCaptcha();
+    if (captcha.success) {
+      logger.info('Captcha detected:', captcha);
+    } else {
+      logger.error('Failed to detect captcha:', captcha.message);
+      return;
     }
+    // await cdpSession.realClick('button[type="submit"]');
+    await sleep(10_000);
   } catch (error) {
     console.error('Error running example:', error);
   } finally {

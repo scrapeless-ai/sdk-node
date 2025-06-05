@@ -21,12 +21,11 @@ const logger = createLogger('Puppeteer');
  *
  * @example
  * ```typescript
- * import { createScrapelessCDPSession } from '@scrapeless-ai/sdk';
+ * import { createPuppeteerCDPSession } from '@scrapeless-ai/sdk';
  *
  * // With regular Puppeteer
  * const page = await browser.newPage();
- * const cdpSession = await page.createCDPSession();
- * const scrapelessCDP = createScrapelessCDPSession(page, cdpSession);
+ * const scrapelessCDP = createPuppeteerCDPSession(page);
  *
  * // Now you can use enhanced methods
  * await scrapelessCDP.realFill('#email', 'user@example.com');
@@ -37,7 +36,7 @@ const logger = createLogger('Puppeteer');
  * @param page - Page instance for selector operations (waitForSelector, etc.)
  * @returns Enhanced CDP session with custom Scrapeless methods
  */
-export async function createScrapelessCDPSession(page: Page): Promise<ScrapelessCDPSession> {
+export async function createPuppeteerCDPSession(page: Page): Promise<ScrapelessCDPSession> {
   const cdpSession = (await page.createCDPSession()) as CustomCDPCommands;
   const customMethods = {
     /**

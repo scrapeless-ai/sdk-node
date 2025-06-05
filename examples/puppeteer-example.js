@@ -4,7 +4,7 @@
  * This example demonstrates how to use the Puppeteer class for browser automation
  * including page navigation and extended CDP session methods
  */
-import { Puppeteer, createScrapelessCDPSession, log as Log, sleep } from '../dist/index.js';
+import { Puppeteer, createPuppeteerCDPSession, log as Log, sleep } from '../dist/index.js';
 
 const logger = Log.withPrefix('puppeteer-example');
 
@@ -40,7 +40,7 @@ async function runExample() {
     //   fs.writeFileSync('./cookies.json', JSON.stringify(cookies, null, 2));
     // }
     await page.goto('https://www.google.com/', { waitUntil: 'networkidle0' });
-    const cdpSession = await createScrapelessCDPSession(page);
+    const cdpSession = await createPuppeteerCDPSession(page);
     await cdpSession.disableCaptchaAutoSolve();
 
     await page.goto('https://prenotami.esteri.it/');

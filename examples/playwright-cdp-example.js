@@ -9,24 +9,25 @@
  * for browser automation with Scrapeless API.
  */
 
-import { Puppeteer, createPuppeteerCDPSession } from '../dist/index.js';
+import { Playwright, createPlaywrightCDPSession } from '../dist/index.js';
 
 async function runExample() {
   console.log('Creating Puppeteer browser instance...');
-  const browser = await Puppeteer.connect({
+  const browser = await Playwright.connect({
     session_name: 'cdp-example-session',
     session_ttl: 300,
     proxy_country: 'US'
   });
+
   try {
     console.log('Creating new page...');
-    const page = await browser.newPage();
+    const context = browser.contexts()[0];
+    const page = await context.newPage();
+    console.log('Navigating to login page...');
+    await page.goto('https://scrapeless.com', { timeout: 60000 });
 
     console.log('Creating Scrapeless-enhanced CDP session...');
-    const cdpSession = await createPuppeteerCDPSession(page);
-
-    console.log('Navigating to login page...');
-    await page.goto('https://app.scrapeless.com/login');
+    const cdpSession = await createPlaywrightCDPSession(page);
 
     console.log('Getting current page URL using CDP...');
     const urlResponse = await cdpSession.liveURL();
