@@ -84,7 +84,7 @@ SCRAPELESS_BASE_API_URL=https://api.scrapeless.com
 SCRAPELESS_ACTOR_API_URL=https://actor.scrapeless.com
 SCRAPELESS_STORAGE_API_URL=https://storage.scrapeless.com
 SCRAPELESS_BROWSER_API_URL=https://browser.scrapeless.com
-SCRAPELESS_CRAWL_API_URL=https://crawl.scrapeless.com
+SCRAPELESS_CRAWL_API_URL=https://api.scrapeless.com
 ```
 
 ## 📖 Usage Examples
@@ -126,7 +126,7 @@ Direct data extraction APIs for websites (e.g., e-commerce, travel platforms). R
 const result = await client.scraping.scrape({
   actor: 'scraper.shopee',
   input: {
-    "url": "https://shopee.tw/a-i.10228173.24803858474"
+    url: 'https://shopee.tw/a-i.10228173.24803858474'
   }
 });
 
