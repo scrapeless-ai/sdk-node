@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.0.1...v1.1.0) (2025-06-05)
+
+### ✨ Features
+
+- async scrape url ([756a8aa](https://github.com/scrapeless-ai/sdk-node/commit/756a8aa2deb7e646c050ce8e4e3bdf4ef62b4b53))
+- complement ScrapeService ([9267200](https://github.com/scrapeless-ai/sdk-node/commit/9267200c36cc73f41fac1720854cddba62c564ed))
+
+### 🐛 Bug Fixes
+
+- batch scrape response ([4e007b4](https://github.com/scrapeless-ai/sdk-node/commit/4e007b47d53b3d390a74a6dd52a0cfd665d01a35))
+- crawl types ([64566da](https://github.com/scrapeless-ai/sdk-node/commit/64566da939eb4e46c375738f3aaeecd187851d02))
+- scrape response struct ([9ec41c9](https://github.com/scrapeless-ai/sdk-node/commit/9ec41c9bebab60de81f1379a849c0dbec90a0b4c))
+
 ### [1.0.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.0.0...v1.0.1) (2025-06-04)
 
 ### 📦 Code Refactoring
