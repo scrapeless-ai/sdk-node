@@ -22,8 +22,7 @@ function saveObjectToJson(obj, filename) {
 
 // Shared ScrapingCrawl instance
 const client = new ScrapingCrawl({
-  apiKey: 'your_api_key',
-  baseUrl: 'http://localhost:3007'
+  apiKey: 'your_api_key'
 });
 
 /**
@@ -31,14 +30,30 @@ const client = new ScrapingCrawl({
  */
 async function exampleScrape() {
   try {
-    const scrapeResponse = await client.scrapeUrl('https://scrapeless.com/', {
-      formats: ['markdown', 'html', 'links', 'screenshot@fullPage'],
-      browserOptions: {
-        session_name: 'scrapingCrawl_scrapeUrl'
-      }
+    const scrapeResponse = await client.scrapeUrl('https://example.com/', {
+      formats: ['markdown', 'html', 'links', 'screenshot@fullPage']
     });
     if (scrapeResponse) {
       saveObjectToJson(scrapeResponse, 'scrapeless-demo-scrape.json');
+      console.log(scrapeResponse);
+    }
+  } catch (error) {
+    console.error('❌ Scrape example failed:', error.message);
+  }
+}
+
+/**
+ * Example: Scrape a single URL and save the result.
+ */
+async function exampleBatchScrape() {
+  try {
+    const scrapeResponse = await client.batchScrapeUrls(['https://example.com/', 'https://example.com/'], {
+      formats: ['markdown', 'html', 'links', 'screenshot@fullPage'],
+      browserOptions: {
+        session_name: 'scrapingCrawl_batchScrape'
+      }
+    });
+    if (scrapeResponse) {
       console.log(scrapeResponse);
     }
   } catch (error) {
@@ -51,7 +66,7 @@ async function exampleScrape() {
  */
 async function exampleCrawl() {
   try {
-    const crawlResult = await client.crawlUrl('https://baidu.com/', {
+    const crawlResult = await client.crawlUrl('https://example.com/', {
       limit: 3,
       maxDepth: 1,
       scrapeOptions: {
@@ -73,6 +88,8 @@ async function exampleCrawl() {
 async function runExamples() {
   console.log('=== Scrapeless ScrapingCrawl Service Examples ===\n');
   await exampleScrape();
+  console.log('\n');
+  await exampleBatchScrape();
   console.log('\n');
   await exampleCrawl();
   console.log('\n');
