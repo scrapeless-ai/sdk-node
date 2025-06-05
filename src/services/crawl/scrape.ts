@@ -3,9 +3,9 @@ import * as zt from 'zod';
 import {
   BatchScrapeResponse,
   BatchScrapeStatusResponse,
-  ErrorResponse,
   ScrapeParams,
-  ScrapeResponse
+  ScrapeResponse,
+  ScrapeStatusResponse
 } from '../../types/scraping-crawl';
 import { ScrapingCrawlBaseService } from './base';
 
@@ -18,26 +18,65 @@ export class ScrapeService extends ScrapingCrawlBaseService {
    * Scrape a single URL
    * @param url Target URL to scrape
    * @param params Optional scraping parameters
+   * * @param pollInterval Optional polling interval for job status (s)
    * @returns Scraped data result
    */
   async scrapeUrl<T extends zt.ZodSchema>(
     url: string,
-    params?: ScrapeParams
-  ): Promise<ScrapeResponse<zt.infer<T>> | ErrorResponse> {
+    params?: ScrapeParams,
+    pollInterval: number = 2
+  ): Promise<ScrapeStatusResponse<zt.infer<T>>> {
     const jsonData: any = { url, ...params };
 
     try {
-      const response = await this.request<any>('/v1/scrape', 'POST', jsonData, {});
-      if (response.success) {
-        return {
-          success: true,
-          warning: response.warning,
-          error: response.error,
-          ...response.data
-        };
-      } else {
-        throw new ScrapelessError(`Failed to scrape URL. Error: ${response.error}`, 400);
+      const response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
+      if (!response.id) {
+        throw new ScrapelessError('Failed to start a scrape job', 400);
       }
+
+      while (true) {
+        const statusResponse = (await this.checkScrapeStatus(response.id)) as ScrapeStatusResponse<zt.infer<T>>;
+        if (statusResponse.status !== 'scraping') {
+          return statusResponse;
+        }
+
+        pollInterval = Math.max(pollInterval, 2);
+        await new Promise(resolve => setTimeout(resolve, pollInterval * 1000));
+      }
+    } catch (error: any) {
+      throw new ScrapelessError(error.message, error.statusCode || 500);
+    }
+  }
+
+  /**
+   * Scrape a single URL
+   * @param url Target URL to scrape
+   * @param params Optional scraping parameters
+   * @returns Job info
+   */
+  async asyncScrapeUrl(url: string, params?: ScrapeParams): Promise<ScrapeResponse> {
+    const jsonData: any = { url, ...params };
+    try {
+      const response = await this.request<any>('/api/v1/crawler/scrape', 'POST', jsonData, {});
+      return response;
+    } catch (err: any) {
+      throw new ScrapelessError(err.message, err.statusCode || 500);
+    }
+  }
+
+  /**
+   * Check the status of a crawl job.
+   * @param id Job ID
+   * @returns Scraped data result
+   */
+  async checkScrapeStatus(id: string): Promise<ScrapeStatusResponse<any>> {
+    if (!id) {
+      throw new ScrapelessError('No scrape ID provided', 400);
+    }
+    const url = `/api/v1/crawler/scrape/${id}`;
+    try {
+      const response = await this.request<any>(url, 'GET');
+      return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
     }
@@ -56,15 +95,22 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     params?: ScrapeParams,
     pollInterval: number = 2,
     ignoreInvalidURLs?: boolean
-  ): Promise<BatchScrapeStatusResponse | ErrorResponse> {
+  ): Promise<BatchScrapeStatusResponse> {
     const jsonData: any = { urls, ignoreInvalidURLs, ...params };
 
     try {
-      const response = await this.request<any>('/v1/batch/scrape', 'POST', jsonData);
-      if (response.id) {
-        return this.monitorJobStatus(response.id, pollInterval);
-      } else {
-        throw new ScrapelessError('Failed to start batch scrape job', 400);
+      const response = await this.request<any>('/api/v1/crawler/scrape/batch', 'POST', jsonData);
+      if (!response.id) {
+        throw new ScrapelessError('Failed to start a batch scrape job', 400);
+      }
+
+      while (true) {
+        const statusResponse = await this.checkBatchScrapeStatus(response.id);
+        if (statusResponse.status !== 'scraping') {
+          return statusResponse;
+        }
+        pollInterval = Math.max(pollInterval, 2);
+        await new Promise(resolve => setTimeout(resolve, pollInterval * 1000));
       }
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);
@@ -82,10 +128,28 @@ export class ScrapeService extends ScrapingCrawlBaseService {
     urls: string[],
     params?: ScrapeParams,
     ignoreInvalidURLs?: boolean
-  ): Promise<BatchScrapeResponse | ErrorResponse> {
+  ): Promise<BatchScrapeResponse> {
     const jsonData: any = { urls, ignoreInvalidURLs, ...params };
     try {
-      const response = await this.request<any>('/v1/batch/scrape', 'POST', jsonData);
+      const response = await this.request<any>('/api/v1/crawler/scrape/batch', 'POST', jsonData);
+      return response;
+    } catch (error: any) {
+      throw new ScrapelessError(error.message, error.statusCode || 500);
+    }
+  }
+
+  /**
+   * Check the status of a batch crawl job.
+   * @param id Job ID
+   * @returns Scraped data result
+   */
+  async checkBatchScrapeStatus(id: string): Promise<BatchScrapeStatusResponse> {
+    if (!id) {
+      throw new ScrapelessError('No scrape ID provided', 400);
+    }
+    const url = `/api/v1/crawler/scrape/batch/${id}`;
+    try {
+      const response = await this.request<any>(url, 'GET');
       return response;
     } catch (error: any) {
       throw new ScrapelessError(error.message, error.statusCode || 500);

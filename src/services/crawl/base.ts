@@ -1,6 +1,6 @@
 import { BaseService } from '../base';
 import { ScrapelessError } from '../../client';
-import { CrawlStatusResponse, ErrorResponse } from '../../types/scraping-crawl';
+import { CrawlStatusResponse } from '../../types/scraping-crawl';
 
 export class ScrapingCrawlBaseService extends BaseService {
   constructor(apiKey: string, baseUrl: string, timeout: number) {
@@ -13,10 +13,10 @@ export class ScrapingCrawlBaseService extends BaseService {
    * @param pollInterval Polling interval in milliseconds
    * @returns Job info
    */
-  async monitorJobStatus(id: string, pollInterval: number): Promise<CrawlStatusResponse | ErrorResponse> {
+  async monitorJobStatus(id: string, pollInterval: number): Promise<CrawlStatusResponse> {
     try {
       while (true) {
-        let statusResponse = await this.request<any>(`/v1/crawl/${id}`, 'GET');
+        let statusResponse = await this.request<any>(`/api/v1/crawler/crawl/${id}`, 'GET');
         if (statusResponse.status === 'completed') {
           if ('data' in statusResponse) {
             let data = statusResponse.data;

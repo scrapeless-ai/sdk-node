@@ -11,6 +11,9 @@ import {
   IQueueUpdateParams
 } from '../types';
 import { getEnv, getEnvWithDefault } from '../env';
+import { log } from '../utils';
+
+const logger = log.withPrefix('Actor');
 
 /**
  * High-level Actor class that integrates various Scrapeless services

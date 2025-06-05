@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.1.0...v1.1.1) (2025-06-05)
+
+### 🐛 Bug Fixes
+
+- crawl base url ([cafc54f](https://github.com/scrapeless-ai/sdk-node/commit/cafc54f20680c6869b98b1147ad7a4142fd3698a))
+
+## [1.1.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.0.1...v1.1.0) (2025-06-05)
+
+### ✨ Features
+
+- async scrape url ([756a8aa](https://github.com/scrapeless-ai/sdk-node/commit/756a8aa2deb7e646c050ce8e4e3bdf4ef62b4b53))
+- complement ScrapeService ([9267200](https://github.com/scrapeless-ai/sdk-node/commit/9267200c36cc73f41fac1720854cddba62c564ed))
+
+### 🐛 Bug Fixes
+
+- batch scrape response ([4e007b4](https://github.com/scrapeless-ai/sdk-node/commit/4e007b47d53b3d390a74a6dd52a0cfd665d01a35))
+- crawl types ([64566da](https://github.com/scrapeless-ai/sdk-node/commit/64566da939eb4e46c375738f3aaeecd187851d02))
+- scrape response struct ([9ec41c9](https://github.com/scrapeless-ai/sdk-node/commit/9ec41c9bebab60de81f1379a849c0dbec90a0b4c))
+
+### [1.0.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.0.0...v1.0.1) (2025-06-04)
+
+### 📦 Code Refactoring
+
+- **actor.ts:** 📦 input data is obtained from kv storage by default ([5cdbbef](https://github.com/scrapeless-ai/sdk-node/commit/5cdbbef15dfd819e8a78bac09a25b4eedd73e543))
+
+## [1.0.0](https://github.com/scrapeless-ai/sdk-node/compare/v0.0.10...v1.0.0) (2025-05-30)
+
+### 📦 Code Refactoring
+
+- remove realFill options parameter ([bb01fa0](https://github.com/scrapeless-ai/sdk-node/commit/bb01fa0783d5ca06de1815dc8c9df175051aea11))
+
+### 🚀 Releases
+
+- v1.0.0 ([58fa3f7](https://github.com/scrapeless-ai/sdk-node/commit/58fa3f7334f36d3e817015a553dbecc7acc2256c))
+- v1.0.0 ([882f8a9](https://github.com/scrapeless-ai/sdk-node/commit/882f8a9d9fa0c350909d4bd66d5f4cea8b7e3072))
+- v1.0.0 ([92381ec](https://github.com/scrapeless-ai/sdk-node/commit/92381ec6ab1a5b5d9f0aedcb99c0cb2c78f0a819))
+
 ### [0.0.10](https://github.com/scrapeless-ai/sdk-node/compare/v0.0.9...v0.0.10) (2025-05-30)
 
 ### 💎 Styles
