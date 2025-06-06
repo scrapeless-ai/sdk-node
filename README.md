@@ -116,6 +116,17 @@ console.log(await page.title());
 await browser.close();
 ```
 
+### Crawl
+Extract data from single pages or traverse entire domains, exporting in formats including Markdown, JSON, HTML, screenshots, and links.
+
+```javascript
+const result = await client.scrapingCrawl.scrapeUrl(
+  "https://example.com"
+);
+
+console.log(result);
+```
+
 ### Scraping API
 
 Direct data extraction APIs for websites (e.g., e-commerce, travel platforms). Retrieve structured product information, pricing, and reviews with pre-built connectors:
