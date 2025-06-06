@@ -1,4 +1,4 @@
-import { chromium, BrowserContext, Browser, Page } from 'playwright-core';
+import { chromium, Browser, Page } from 'playwright-core';
 import { BaseBrowser, createLogger } from './base';
 import {
   ScrapelessConfig,
@@ -8,7 +8,9 @@ import {
   CustomCDPCommands,
   CaptchaCDPResponse,
   CaptchaOptions,
-  SetAutoSolveOptions
+  SetAutoSolveOptions,
+  ImageToTextOptions,
+  SetConfigOptions
 } from '../types';
 
 const logger = createLogger('Playwright');
@@ -239,6 +241,40 @@ export async function createPlaywrightCDPSession(page: Page): Promise<Scrapeless
       } catch (error) {
         logger.error('Error in waitCaptchaSolved', { error });
         throw new Error(`Failed to wait for captcha solved: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    },
+
+    /**
+     * Solve Image captcha
+     * @param params - Configuration including timeout and img selector and input selector
+     * @throws Error if waiting fails
+     */
+    imageToText: async (params: ImageToTextOptions): Promise<void> => {
+      const { timeout = 30_000 } = params;
+      logger.debug(`Waiting for captcha solved with timeout: ${timeout}ms`);
+
+      try {
+        await cdpSession.send('Captcha.imageToText', params);
+      } catch (error) {
+        logger.error('Error in imageToText', { params, error });
+        throw new Error(`Failed to solve image captcha: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    },
+
+    /**
+     * Set config
+     * @param options Optional auto solve configuration
+     * @throws Error if the operation fails
+     */
+    setConfig: async (options: SetConfigOptions): Promise<void> => {
+      try {
+        await cdpSession.send('Captcha.setConfig', {
+          config: JSON.stringify(options)
+        });
+        logger.debug('Set config success', { options });
+      } catch (error) {
+        logger.error('Error in setConfig', { options, error });
+        throw new Error(`Failed to set auto solve: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
   };

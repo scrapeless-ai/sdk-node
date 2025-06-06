@@ -85,6 +85,8 @@ export type AgentCommands = {
   'Agent.type': (params: { selector: string; content: string }) => Promise<void>;
   'Captcha.setAutoSolve': (params: { autoSolve: boolean; options?: string }) => Promise<void>;
   'Captcha.solve': (params: { detectTimeout: number; options?: string }) => Promise<CaptchaCDPResponse>;
+  'Captcha.imageToText': (params: ImageToTextOptions) => Promise<void>;
+  'Captcha.setConfig': (params: { config: string }) => Promise<void>;
 };
 
 /**
@@ -108,6 +110,29 @@ export type CustomCDPCommands = {
 export interface LiveURLResponse {
   error: string | null;
   liveURL: string | null;
+}
+
+/**
+ * Image to text options interface
+ */
+export interface ImageToTextOptions {
+  imageSelector: string; // Selector for the image element
+  inputSelector: string; // Selector for the input field to fill with text
+  timeout?: number; // Timeout for the operation
+}
+
+/**
+ * Set config options interface
+ */
+export interface SetConfigOptions {
+  apiKey?: string;
+  autoSolve?: boolean;
+  enabledForRecaptcha?: boolean;
+  enabledForRecaptchaV3?: boolean;
+  enabledForTurnstile?: boolean;
+  enabledForHcaptcha?: boolean;
+  enabledForAws?: boolean;
+  cloudflareMode?: 'click' | 'token';
 }
 
 // ============================================================================
@@ -148,6 +173,13 @@ export interface ScrapelessCDPSession extends CDPSession {
   setAutoSolve(options?: SetAutoSolveOptions): Promise<void>;
 
   /**
+   * Set config
+   * @param options Optional auto solve configuration
+   * @throws Error if the operation fails
+   */
+  setConfig(options?: SetConfigOptions): Promise<void>;
+
+  /**
    * Disable auto solve for a captcha
    * @throws Error if the operation fails
    */
@@ -173,4 +205,11 @@ export interface ScrapelessCDPSession extends CDPSession {
    * @throws Error if the operation fails
    */
   waitCaptchaSolved(options?: { timeout?: number }): Promise<CaptchaCDPResponse>;
+
+  /**
+   * Solve Image captcha
+   * @param options - Configuration including timeout and img selector and input selector
+   * @throws Error if waiting fails
+   */
+  imageToText(params: ImageToTextOptions): Promise<void>;
 }
