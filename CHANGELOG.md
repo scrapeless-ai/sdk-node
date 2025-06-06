@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.2.0...v1.3.0) (2025-06-06)
+
+### ✨ Features
+
+- **cdp:** imageToText method ([9e6095c](https://github.com/scrapeless-ai/sdk-node/commit/9e6095ca393e46c9465512282152541276640920))
+
 ## [1.2.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.1.1...v1.2.0) (2025-06-05)
 
 ### ✨ Features
