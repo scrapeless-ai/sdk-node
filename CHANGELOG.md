@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.3.0...v1.3.1) (2025-06-09)
+
+### 🐛 Bug Fixes
+
+- add actor.input() function's ts tips ([93f2e65](https://github.com/scrapeless-ai/sdk-node/commit/93f2e6555530914e8e210ce1fedfaeaf72a44474))
+
 ## [1.3.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.2.0...v1.3.0) (2025-06-06)
 
 ### ✨ Features
