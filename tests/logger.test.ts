@@ -54,6 +54,16 @@ describe('Log Module', () => {
   });
 
   describe('Log Methods', () => {
+    it('log level should be all', () => {
+      console.log('Log level:', process.env.SCRAPELESS_LOG_LEVEL);
+
+      log.info('info');
+      log.debug('debug');
+      log.warn('warn');
+      log.error('error');
+      log.trace('trace');
+    });
+
     it('trace method should log successfully', () => {
       log.info('User logged in', 'additional info');
       log.info('User {0}', 'John', 'extra info');
