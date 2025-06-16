@@ -99,7 +99,7 @@ const colorizePrefix = (prefix: string) => {
 const transports: Transport[] = [
   // Console output
   new winston.transports.Console({
-    level: LogLevel.DEBUG,
+    level: process.env.SCRAPELESS_LOG_LEVEL || LogLevel.INFO,
     format: winston.format.combine(
       winston.format.colorize({ colors: LEVEL_COLORS }),
       winston.format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ssZ' }),
@@ -113,7 +113,7 @@ try {
   fs.accessSync(LOG_ROOT_DIR, fs.constants.W_OK);
   // Use type conversion to avoid type errors
   const fileTransport = new winston.transports.DailyRotateFile({
-    level: LogLevel.DEBUG,
+    level: process.env.SCRAPELESS_LOG_LEVEL || LogLevel.INFO,
     filename: path.join(LOG_ROOT_DIR, 'scrapeless-%DATE%.log'),
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
