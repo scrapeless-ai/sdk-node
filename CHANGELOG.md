@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.3.2...v1.4.0) (2025-06-18)
+
+### ✨ Features
+
+- modify some type annotations of typescript ([10159b8](https://github.com/scrapeless-ai/sdk-node/commit/10159b8fe4a71a345ef8392a441fd0b754b31f6a))
+
 ### [1.3.2](https://github.com/scrapeless-ai/sdk-node/compare/v1.3.1...v1.3.2) (2025-06-16)
 
 ### 🐛 Bug Fixes
