@@ -104,4 +104,13 @@ export class DatasetStorage extends BaseService implements IDatasetStorage {
 
     return this.request<IPagination<T>>(`${this.basePath}/${datasetId}/items?${queryParams.toString()}`);
   }
+
+  /**
+   * Get dataset
+   * @param datasetId ID of the dataset
+   * @returns Dataset info
+   */
+  async getDataset(datasetId: string): Promise<IDataset> {
+    return this.request<IDataset>(`${this.basePath}/${datasetId}`);
+  }
 }
