@@ -119,6 +119,14 @@ export class Actor {
   }
 
   /**
+   * Get dataset info
+   * @returns Dataset info
+   */
+  async getDataset() {
+    return await this.storage.dataset.getDataset(this.datasetId);
+  }
+
+  /**
    * KV store convenience methods with environment variables
    */
 

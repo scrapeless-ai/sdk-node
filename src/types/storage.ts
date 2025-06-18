@@ -147,23 +147,18 @@ export interface IDataset {
   updatedAt: Date;
 
   /**
-   * Last access timestamp
-   */
-  accessedAt: Date;
-
-  /**
    * Dataset statistics
    */
   stats: {
     /**
      * Total number of items
      */
-    itemCount: number;
+    count: number;
 
     /**
-     * Number of clean items
+     * Total size of the dataset in bytes
      */
-    cleanItemCount: number;
+    size: number;
   };
 }
 
@@ -220,11 +215,6 @@ export interface IDatasetStorage {
  */
 export interface IKVNamespace {
   /**
-   * Last access timestamp
-   */
-  accessedAt: Date;
-
-  /**
    * Actor ID associated with the namespace
    */
   actorId: string;
@@ -253,6 +243,21 @@ export interface IKVNamespace {
    * Last update timestamp
    */
   updatedAt: Date;
+
+  /**
+   * KV namespace statistics
+   */
+  stats: {
+    /**
+     * Total number of items
+     */
+    count: number;
+
+    /**
+     * Total size of the namespace in bytes
+     */
+    size: number;
+  };
 }
 
 /**
