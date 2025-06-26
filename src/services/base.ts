@@ -37,6 +37,14 @@ export abstract class BaseService {
       // log.debug("Request body:", options.body);
     }
 
+    if (body && additionalHeaders['content-type'].startsWith('multipart/form-data;')) {
+      options.headers = {
+        ...additionalHeaders,
+        'X-API-Key': this.apiKey
+      };
+      options.body = body;
+    }
+
     const response = await nodeFetch(`${this.baseUrl}${endpoint}`, options);
 
     // Get response content, parse it if it's JSON

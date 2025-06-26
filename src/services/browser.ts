@@ -1,4 +1,6 @@
 import { BaseService } from './base';
+import { ExtensionService } from './extension';
+import { getEnvWithDefault } from '../env';
 import { ICreateBrowser, ICreateBrowserResponse } from '../types';
 
 // Define default parameters
@@ -9,8 +11,13 @@ const DEFAULT_BROWSER_OPTIONS: ICreateBrowser = {
 };
 
 export class BrowserService extends BaseService {
+  public readonly extension: ExtensionService;
+
   constructor(apiKey: string, baseUrl: string, timeout: number = 30_000) {
     super(apiKey, baseUrl, timeout);
+
+    const baseApiURL = getEnvWithDefault('SCRAPELESS_BASE_API_URL', 'https://api.scrapeless.com');
+    this.extension = new ExtensionService(apiKey, baseApiURL, timeout);
   }
 
   /**
@@ -30,7 +37,8 @@ export class BrowserService extends BaseService {
       session_recording: data.session_recording?.toString(),
       proxy_country: data.proxy_country,
       proxy_url: data.proxy_url,
-      fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : undefined
+      fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : undefined,
+      extension_ids: data.extension_ids
     };
 
     if (data.proxy_url) {

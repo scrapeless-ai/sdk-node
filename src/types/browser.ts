@@ -14,6 +14,7 @@ export interface ICreateBrowser {
   proxy_country?: string;
   proxy_url?: string;
   fingerprint?: object;
+  extension_ids?: string;
 }
 
 /**
