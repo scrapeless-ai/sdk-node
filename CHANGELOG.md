@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.4.0...v1.5.0) (2025-06-26)
+
+### ✨ Features
+
+- **browser:** add extension func example ([cb3eee0](https://github.com/scrapeless-ai/sdk-node/commit/cb3eee04a4e8f412f52ccebddf18edc9779f430f))
+- **browser:** upload custom extension ([574f75e](https://github.com/scrapeless-ai/sdk-node/commit/574f75e85acbe8ab084e0b06007fbbb7084b70ac))
+
 ## [1.4.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.3.2...v1.4.0) (2025-06-18)
 
 ### ✨ Features
