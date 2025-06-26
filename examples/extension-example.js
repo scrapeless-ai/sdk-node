@@ -1,5 +1,5 @@
+import { Scrapeless } from '@scrapeless-ai/sdk';
 import puppeteer from 'puppeteer-core';
-import { Scrapeless } from '../dist/index.js';
 
 const client = new Scrapeless();
 
