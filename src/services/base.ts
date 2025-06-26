@@ -37,7 +37,7 @@ export abstract class BaseService {
       // log.debug("Request body:", options.body);
     }
 
-    if (body && additionalHeaders['content-type'].startsWith('multipart/form-data;')) {
+    if (body && additionalHeaders['content-type']?.startsWith('multipart/form-data;')) {
       options.headers = {
         ...additionalHeaders,
         'X-API-Key': this.apiKey
