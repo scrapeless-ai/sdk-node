@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.5.0...v1.5.1) (2025-06-26)
+
+### 🐛 Bug Fixes
+
+- fix base request ([2c5b6d8](https://github.com/scrapeless-ai/sdk-node/commit/2c5b6d89f65ad4a6d349920af2118750ac0c22fe))
+
 ## [1.5.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.4.0...v1.5.0) (2025-06-26)
 
 ### ✨ Features
