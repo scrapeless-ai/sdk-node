@@ -11,3 +11,4 @@ export * from './actor';
 export * from './runner';
 export * from './storage';
 export * from './scraping-crawl';
+export * from './extension';
