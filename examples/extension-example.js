@@ -2,34 +2,35 @@ import { Scrapeless } from '@scrapeless-ai/sdk';
 import puppeteer from 'puppeteer-core';
 
 const client = new Scrapeless();
+const { browser: scrapingBrowser } = client;
 
 async function uploadExtension() {
-  const response = await client.browser.extension.upload('your-file-path.zip', 'Scrapeless');
+  const response = await scrapingBrowser.extension.upload('your-file-path.zip', 'Scrapeless');
   console.log(response);
 }
 
 async function updateExtension(extensionId) {
-  const response = await client.browser.extension.update(extensionId, 'your-file-path.zip', 'Scrapeless');
+  const response = await scrapingBrowser.extension.update(extensionId, 'your-file-path.zip', 'Scrapeless');
   console.log(response);
 }
 
 async function listExtensions() {
-  const response = await client.browser.extension.list();
+  const response = await scrapingBrowser.extension.list();
   console.log(response);
 }
 
 async function deleteExtension(extensionId) {
-  const response = await client.browser.extension.delete(extensionId);
+  const response = await scrapingBrowser.extension.delete(extensionId);
   console.log(response);
 }
 
 async function getExtension(extensionId) {
-  const response = await client.browser.extension.get(extensionId);
+  const response = await scrapingBrowser.extension.get(extensionId);
   console.log(response);
 }
 
 async function useExtension(extensionIds) {
-  const { browserWSEndpoint } = client.browser.create({
+  const { browserWSEndpoint } = scrapingBrowser.create({
     session_name: 'use-extension',
     session_ttl: 180,
     session_recording: true,
