@@ -121,6 +121,40 @@ async function runActorExample() {
     } catch (error) {
       console.error('Queue operations error:', error.message);
     }
+
+    // Vector operations
+    console.log('\n--- Vector operations ---');
+    try {
+      // Get collection ID from environment
+      const collectionId = process.env.SCRAPELESS_COLLECTION_ID;
+
+      // Create docs to collection (using Actor convenience method)
+      const opResponse = await actor.createDocs([
+        {
+          vector: [], // your text vector
+          content: '' // your text
+        }
+      ]);
+      console.log('Create docs to collection:', opResponse);
+
+      const queryParam = {
+        vector: [], // your query vector
+        topk: 1,
+        includeContent: true,
+        includeVector: true
+      };
+
+      // Query docs from collection (using Actor convenience method)
+      const queryResult = await actor.queryDocs(queryParam);
+
+      console.log('Query docs:', docs);
+
+      // Using direct storage service
+      const queryResultDirect = await actor.storage.vector.queryDocs(collectionId, queryParam);
+      console.log('Direct API call example for pull:', queryResultDirect.length === queryResult.length);
+    } catch (error) {
+      console.error('Vector operations error:', error.message);
+    }
   } catch (error) {
     console.error('Actor example error:', error);
   }

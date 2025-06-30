@@ -157,6 +157,45 @@ async function queueStorageExample(client) {
 }
 
 /**
+ * Demonstrates how to create and use the vector storage
+ */
+async function vectorStorageExample(client) {
+  try {
+    console.log('Vector storage example:');
+
+    // Create a new collection
+    const collection = await client.storage.vector.createCollection({
+      name: 'my-collection',
+      dimension: 1536,
+      description: 'My first collection'
+    });
+    console.log(`Collection created with ID: ${collection.id}`);
+
+    // Create collection docs
+    const opResponse = await client.storage.vector.createDocs([
+      {
+        vector: [], // your text vector
+        content: '' // your text
+      }
+    ]);
+    console.log('Create docs to collection:', opResponse);
+
+    // Query docs from collection
+    const docs = await client.storage.vector.queryDocs(collection.id, {
+      vector: [], // your search vector
+      topk: 1,
+      includeVector: true,
+      includeContent: true
+    });
+    console.log('Query docs from collection:', docs);
+
+    console.log('Vector storage example completed\n');
+  } catch (error) {
+    console.error('Vector storage example error:', error);
+  }
+}
+
+/**
  * Main example function
  */
 async function runExample() {
@@ -171,6 +210,7 @@ async function runExample() {
     await kvStorageExample(client);
     await objectStorageExample(client);
     await queueStorageExample(client);
+    await vectorStorageExample(client);
 
     console.log('All storage examples completed successfully');
   } catch (error) {

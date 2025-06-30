@@ -45,6 +45,7 @@ export class Actor {
   namespaceId: string;
   bucketId: string;
   queueId: string;
+  collectionId: string;
 
   constructor() {
     // Get API key from environment
@@ -58,6 +59,7 @@ export class Actor {
     this.namespaceId = getEnv('SCRAPELESS_KV_NAMESPACE_ID');
     this.bucketId = getEnv('SCRAPELESS_BUCKET_ID');
     this.queueId = getEnv('SCRAPELESS_QUEUE_ID');
+    this.collectionId = getEnv('SCRAPELESS_COLLECTION_ID');
 
     // Initialize all services
     this.storage = new StorageService(apiKey, storageURL, timeout);
@@ -431,62 +433,56 @@ export class Actor {
   }
 
   /**
-   * Create multiple documents in a vector collection.
-   * @param collectionId Collection ID.
+   * Create multiple documents in default collection.
    * @param docs Array of document creation parameters.
    * @returns The document operation response.
    */
-  async createDocs(collectionId: string, docs: Array<ICreateDocParams>) {
-    return await this.storage.vector.createDocs(collectionId, docs);
+  async createDocs(docs: Array<ICreateDocParams>) {
+    return await this.storage.vector.createDocs(this.collectionId, docs);
   }
 
   /**
-   * Update multiple documents in a vector collection.
-   * @param collectionId Collection ID.
+   * Update multiple documents in default collection.
    * @param docs Array of document update parameters.
    * @returns The document operation response.
    */
-  async updateDocs(collectionId: string, docs: Array<IUpdateDocParams>) {
-    return await this.storage.vector.updateDocs(collectionId, docs);
+  async updateDocs(docs: Array<IUpdateDocParams>) {
+    return await this.storage.vector.updateDocs(this.collectionId, docs);
   }
 
   /**
-   * Upsert (create or update) multiple documents in a vector collection.
-   * @param collectionId Collection ID.
+   * Upsert (create or update) multiple documents in default collection.
    * @param docs Array of document update parameters.
    * @returns The document operation response.
    */
-  async upsertDocs(collectionId: string, docs: Array<IUpdateDocParams>) {
-    return await this.storage.vector.upsertDocs(collectionId, docs);
+  async upsertDocs(docs: Array<IUpdateDocParams>) {
+    return await this.storage.vector.upsertDocs(this.collectionId, docs);
   }
 
   /**
-   * Delete multiple documents from a vector collection.
-   * @param collectionId Collection ID.
+   * Delete multiple documents from default collection.
    * @param ids Array of document IDs to delete.
    * @returns The document operation response.
    */
-  async deleteDocs(collectionId: string, ids: string[]) {
-    return await this.storage.vector.delDocs(collectionId, ids);
+  async deleteDocs(ids: string[]) {
+    return await this.storage.vector.delDocs(this.collectionId, ids);
   }
 
   /**
-   * Query documents in a vector collection using vector search.
-   * @param collectionId Collection ID.
+   * Query documents default vector collection using vector search.
    * @param params Query parameters.
    * @returns An array of documents.
    */
-  async queryDocs(collectionId: string, params: IQueryVectorParams) {
-    return await this.storage.vector.queryDocs(collectionId, params);
+  async queryDocs(params: IQueryVectorParams) {
+    return await this.storage.vector.queryDocs(this.collectionId, params);
   }
 
   /**
-   * Query documents in a vector collection by their IDs.
-   * @param collectionId Collection ID.
+   * Query documents in default collection by their IDs.
    * @param ids Array of document IDs.
    * @returns A record of document IDs to documents.
    */
-  async queryDocsByIds(collectionId: string, ids: string[]) {
-    return await this.storage.vector.queryDocsByIds(collectionId, ids);
+  async queryDocsByIds(ids: string[]) {
+    return await this.storage.vector.queryDocsByIds(this.collectionId, ids);
   }
 }
