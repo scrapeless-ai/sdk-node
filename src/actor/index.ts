@@ -8,7 +8,12 @@ import {
   IObjectListParams,
   IObjectCreateParams,
   IQueueCreateParams,
-  IQueueUpdateParams
+  IQueueUpdateParams,
+  IVectorListParams,
+  ICreateCollectionParams,
+  ICreateDocParams,
+  IUpdateDocParams,
+  IQueryVectorParams
 } from '../types';
 import { getEnv, getEnvWithDefault } from '../env';
 
@@ -372,5 +377,116 @@ export class Actor {
    */
   async ackMessage(msgId: string) {
     return await this.storage.queue.ack(this.queueId, msgId);
+  }
+
+  /**
+   * Vector storage convenience methods with environment variables
+   */
+
+  /**
+   * List all available vector collections.
+   * @param params Pagination and filter parameters.
+   * @returns A paginated list of collections.
+   */
+  async listCollections(params: IVectorListParams) {
+    return await this.storage.vector.listCollections(params);
+  }
+
+  /**
+   * Create a new vector collection.
+   * @param data Collection creation parameters.
+   * @returns The created collection.
+   */
+  async createCollection(data: ICreateCollectionParams) {
+    return await this.storage.vector.createCollection(data);
+  }
+
+  /**
+   * Update an existing vector collection's name and description.
+   * @param id Collection ID.
+   * @param name New name for the collection.
+   * @param description Optional new description for the collection.
+   * @returns Null on success.
+   */
+  async updateCollection(id: string, name: string, description?: string) {
+    return await this.storage.vector.updateCollection(id, name, description);
+  }
+
+  /**
+   * Delete a vector collection by its ID.
+   * @param id Collection ID.
+   * @returns Null on success.
+   */
+  async deleteCollection(id: string) {
+    return await this.storage.vector.delCollection(id);
+  }
+
+  /**
+   * Get a vector collection by its ID.
+   * @param id Collection ID.
+   * @returns The collection.
+   */
+  async getCollection(id: string) {
+    return await this.storage.vector.getCollection(id);
+  }
+
+  /**
+   * Create multiple documents in a vector collection.
+   * @param collectionId Collection ID.
+   * @param docs Array of document creation parameters.
+   * @returns The document operation response.
+   */
+  async createDocs(collectionId: string, docs: Array<ICreateDocParams>) {
+    return await this.storage.vector.createDocs(collectionId, docs);
+  }
+
+  /**
+   * Update multiple documents in a vector collection.
+   * @param collectionId Collection ID.
+   * @param docs Array of document update parameters.
+   * @returns The document operation response.
+   */
+  async updateDocs(collectionId: string, docs: Array<IUpdateDocParams>) {
+    return await this.storage.vector.updateDocs(collectionId, docs);
+  }
+
+  /**
+   * Upsert (create or update) multiple documents in a vector collection.
+   * @param collectionId Collection ID.
+   * @param docs Array of document update parameters.
+   * @returns The document operation response.
+   */
+  async upsertDocs(collectionId: string, docs: Array<IUpdateDocParams>) {
+    return await this.storage.vector.upsertDocs(collectionId, docs);
+  }
+
+  /**
+   * Delete multiple documents from a vector collection.
+   * @param collectionId Collection ID.
+   * @param ids Array of document IDs to delete.
+   * @returns The document operation response.
+   */
+  async deleteDocs(collectionId: string, ids: string[]) {
+    return await this.storage.vector.delDocs(collectionId, ids);
+  }
+
+  /**
+   * Query documents in a vector collection using vector search.
+   * @param collectionId Collection ID.
+   * @param params Query parameters.
+   * @returns An array of documents.
+   */
+  async queryDocs(collectionId: string, params: IQueryVectorParams) {
+    return await this.storage.vector.queryDocs(collectionId, params);
+  }
+
+  /**
+   * Query documents in a vector collection by their IDs.
+   * @param collectionId Collection ID.
+   * @param ids Array of document IDs.
+   * @returns A record of document IDs to documents.
+   */
+  async queryDocsByIds(collectionId: string, ids: string[]) {
+    return await this.storage.vector.queryDocsByIds(collectionId, ids);
   }
 }

@@ -569,7 +569,7 @@ export interface IObjectUploadResponse extends ICommonResponse {
   /**
    * Object ID of the uploaded file
    */
-  object_id: string;
+  objectId: string;
 }
 
 /**
@@ -660,15 +660,12 @@ export interface IQueue {
   /**
    * Actor ID associated with the queue
    */
-  actor_id: string;
+  actorId: string;
 
   /**
    * Creation timestamp
    */
-  created_at: {
-    nanos: number;
-    seconds: number;
-  };
+  createdAt: Date;
 
   /**
    * Description of the queue
@@ -688,7 +685,7 @@ export interface IQueue {
   /**
    * Run ID associated with the queue
    */
-  run_id: string;
+  runId: string;
 
   /**
    * Queue statistics
@@ -718,20 +715,12 @@ export interface IQueue {
   /**
    * Team ID associated with the queue
    */
-  team_id: string;
+  teamId: string;
 
   /**
    * Last update timestamp
    */
-  updated_at: {
-    nanos: number;
-    seconds: number;
-  };
-
-  /**
-   * User ID associated with the queue
-   */
-  user_id: string;
+  updatedAt: Date;
 }
 
 /**
@@ -923,6 +912,321 @@ export interface IQueueStorage {
    * @param msgId ID of the message to acknowledge
    */
   ack: (queueId: string, msgId: string) => Promise<ICommonResponse>;
+}
+
+/**
+ * Collection information for vector storage.
+ * Represents a vector collection, including metadata and statistics.
+ */
+export interface ICollection {
+  /**
+   * Unique identifier of the collection.
+   */
+  id: string;
+
+  /**
+   * Name of the collection.
+   */
+  name: string;
+
+  /**
+   * Team ID associated with the collection.
+   */
+  teamId: string;
+
+  /**
+   * Actor ID associated with the collection.
+   */
+  actorId: string;
+
+  /**
+   * Run ID associated with the collection.
+   */
+  runId: string;
+
+  /**
+   * Description of the collection.
+   */
+  description: string;
+
+  /**
+   * Creation timestamp of the collection.
+   */
+  createdAt: Date;
+
+  /**
+   * Last update timestamp of the collection.
+   */
+  updatedAt: Date;
+
+  /**
+   * Dimension of the vectors in the collection.
+   */
+  dimension: number;
+
+  /**
+   * Metric type used for vector similarity (e.g., "cosine", "euclidean").
+   */
+  metric: string;
+
+  /**
+   * Collection statistics, including document count and total size.
+   */
+  stats: {
+    /**
+     * Total number of documents in the collection.
+     */
+    count: number;
+
+    /**
+     * Total size of the collection in bytes.
+     */
+    size: number;
+  };
+}
+
+/**
+ * Document information for vector storage.
+ * Represents a single document with vector and content.
+ */
+export interface IDoc {
+  /**
+   * Unique identifier for the document.
+   */
+  id: string;
+
+  /**
+   * Dense vector representation, typically used for similarity search.
+   */
+  vector: number[];
+
+  /**
+   * Document text content.
+   */
+  content: string;
+
+  /**
+   * Sparse vector representation, where keys are feature names or dimensions and values are weights.
+   */
+  sparseVector: Map<string, number>;
+
+  /**
+   * Similarity or relevance score for the document.
+   */
+  score: number;
+}
+
+/**
+ * Result of a document operation.
+ * Contains information about the operation performed on a document.
+ */
+export interface IDocOpResult {
+  /**
+   * Operation performed on the document (e.g., "create", "update", "delete").
+   */
+  docOp: string;
+
+  /**
+   * Unique identifier of the document.
+   */
+  id: string;
+
+  /**
+   * Status or result code of the operation.
+   */
+  code: number;
+
+  /**
+   * Message describing the result or error.
+   */
+  message: string;
+}
+
+/**
+ * Response for document operations.
+ * Contains a list of results for each document operation.
+ */
+export interface IDocOpResponse {
+  /**
+   * List of results for each document operation.
+   */
+  output: IDocOpResult[];
+}
+
+/**
+ * Parameters for listing vector collections.
+ * Extends pagination parameters and allows filtering by actor and run.
+ */
+export interface IVectorListParams extends IPaginationParams {
+  /**
+   * Actor ID to filter collections.
+   */
+  actor?: string;
+
+  /**
+   * Run ID to filter collections.
+   */
+  runId?: string;
+}
+
+/**
+ * Parameters for creating a new vector collection.
+ */
+export interface ICreateCollectionParams {
+  /**
+   * Name of the collection.
+   */
+  name: string;
+
+  /**
+   * Dimension of the vectors in the collection.
+   */
+  dimension: number;
+
+  /**
+   * Actor ID to associate with the collection.
+   */
+  actor?: string;
+
+  /**
+   * Run ID to associate with the collection.
+   */
+  runId?: string;
+
+  /**
+   * Description of the collection.
+   */
+  description?: string;
+}
+
+/**
+ * Parameters for creating a new document.
+ * Omits the "id" and "score" fields from IDoc.
+ */
+export type ICreateDocParams = Omit<IDoc, 'id' | 'score'>;
+
+/**
+ * Parameters for updating a document.
+ * Omits the "score" field from IDoc.
+ */
+export type IUpdateDocParams = Omit<IDoc, 'score'>;
+
+/**
+ * Parameters for querying vectors in a collection.
+ */
+export interface IQueryVectorParams {
+  /**
+   * Collection ID (not serialized in JSON; typically passed via route or metadata).
+   */
+  collectionId: string;
+
+  /**
+   * Dense vector used for similarity search.
+   */
+  vector: number[];
+
+  /**
+   * Sparse vector representation for hybrid or weighted search.
+   */
+  sparseVector: Record<string, number>;
+
+  /**
+   * Number of top results to return.
+   */
+  topk: number;
+
+  /**
+   * Whether to include the original vector in the response.
+   */
+  includeVector: boolean;
+
+  /**
+   * Whether to include content (e.g. document text) in the response.
+   */
+  includeContent: boolean;
+}
+
+/**
+ * Vector storage service interface.
+ * Provides methods for managing vector collections and documents.
+ */
+export interface IVectorStorage {
+  /**
+   * List all available vector collections.
+   * @param params Pagination and filter parameters.
+   * @returns A promise resolving to a paginated list of collections.
+   */
+  listCollections: (params: IVectorListParams) => Promise<IPagination<ICollection>>;
+
+  /**
+   * Create a new vector collection.
+   * @param params Collection creation parameters.
+   * @returns A promise resolving to the created collection.
+   */
+  createCollection: (params: ICreateCollectionParams) => Promise<ICollection>;
+
+  /**
+   * Update an existing collection's name and description.
+   * @param id Collection ID.
+   * @param name New name for the collection.
+   * @param description Optional new description for the collection.
+   */
+  updateCollection: (id: string, name: string, description?: string) => Promise<null>;
+
+  /**
+   * Delete a collection by its ID.
+   * @param id Collection ID.
+   * @returns A promise resolving to null on success.
+   */
+  delCollection: (id: string) => Promise<null>;
+
+  /**
+   * Get a collection by its ID.
+   * @param id Collection ID.
+   */
+  getCollection: (id: string) => Promise<ICollection>;
+
+  /**
+   * Create multiple documents in a collection.
+   * @param collectionId Collection ID.
+   * @param docs Array of document creation parameters.
+   */
+  createDocs: (collectionId: string, docs: Array<ICreateDocParams>) => Promise<IDocOpResponse>;
+
+  /**
+   * Update multiple documents in a collection.
+   * @param collectionId Collection ID.
+   * @param docs Array of document update parameters.
+   */
+  updateDocs: (collectionId: string, docs: Array<IUpdateDocParams>) => Promise<IDocOpResponse>;
+
+  /**
+   * Upsert (create or update) multiple documents in a collection.
+   * @param collectionId Collection ID.
+   * @param docs Array of document update parameters.
+   */
+  upsertDocs: (collectionId: string, docs: Array<IUpdateDocParams>) => Promise<IDocOpResponse>;
+
+  /**
+   * Delete multiple documents from a collection.
+   * @param collectionId Collection ID.
+   * @param docIds Array of document IDs to delete.
+   */
+  delDocs: (collectionId: string, docIds: string[]) => Promise<IDocOpResponse>;
+
+  /**
+   * Query documents in a collection using vector search.
+   * @param collectionId Collection ID.
+   * @param params Query parameters.
+   */
+  queryDocs: (collectionId: string, params: IQueryVectorParams) => Promise<Array<IDoc>>;
+
+  /**
+   * Query documents in a collection by their IDs.
+   * @param collectionId Collection ID.
+   * @param ids Array of document IDs.
+   */
+  queryDocsByIds: (collectionId: string, ids: string[]) => Promise<Record<string, IDoc>>;
 }
 
 /**

@@ -56,8 +56,7 @@ export abstract class BaseService {
       data = await response.text();
     }
     // log.debug("Response data:", data);
-
-    if (!response.ok) {
+    if (!response.ok || data.err) {
       let errorMessage = '';
       let errorCode = response.status;
       if (typeof data === 'object') {
