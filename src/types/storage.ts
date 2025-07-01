@@ -1252,6 +1252,11 @@ export interface IStorageService {
    * Queue storage service
    */
   queue: IQueueStorage;
+
+  /**
+   * Queue storage service
+   */
+  vector: IVectorStorage;
 }
 
 export interface IBulkSetValueResponse {
