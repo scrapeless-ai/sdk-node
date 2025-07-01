@@ -42,20 +42,21 @@ export async function createRoot() {
   }
 }
 
-export async function createDataset(dir: keyof typeof metadataStore) {
-  const datasetPath = path.resolve(`storage/${dir}`);
-  if (!fs.existsSync(datasetPath)) {
-    await fs.promises.mkdir(datasetPath);
-    await fs.promises.mkdir(path.join(datasetPath, 'default'));
+export async function createDir(dir: keyof typeof metadataStore) {
+  const storagePath = path.resolve(`storage/${dir}`);
+  if (!fs.existsSync(storagePath)) {
+    await fs.promises.mkdir(storagePath, { recursive: true });
+    await fs.promises.mkdir(path.join(storagePath, 'default'));
     const metadata = metadataStore[dir];
 
     await fs.promises.writeFile(
-      path.join(datasetPath, 'default', 'metadata.json'),
+      path.join(storagePath, 'default', 'metadata.json'),
       JSON.stringify({
         ...metadata,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       })
     );
+    if (dir === 'kv_stores') await fs.promises.writeFile(path.join(storagePath, 'default', 'INPUT.json'), '');
   }
 }

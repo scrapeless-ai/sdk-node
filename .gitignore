@@ -5,7 +5,10 @@ npm-debug.log
 dist/
 build/
 lib/
-storage/
+storage/*
+
+!storage/http/
+!storage/memory/
 
 .vscode/
 .idea/

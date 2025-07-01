@@ -1,4 +1,4 @@
-import { ScrapelessConfig } from './types';
+import { ScrapelessConfig, IStorageService } from './types';
 import {
   BrowserService,
   ScrapingService,
@@ -6,10 +6,11 @@ import {
   UniversalService,
   ProxiesService,
   ActorService,
-  StorageService,
+  HttpStorageService,
+  LocalStorageService,
   ScrapingCrawlService
 } from './services';
-import { createRoot, createDataset } from './utils/memory';
+import { createRoot } from './utils/memory';
 
 import { getEnv, getEnvWithDefault } from './env';
 
@@ -30,7 +31,7 @@ export class ScrapelessClient {
   public readonly universal: UniversalService;
   public readonly proxies: ProxiesService;
   public readonly actor: ActorService;
-  public readonly storage: StorageService;
+  public readonly storage: IStorageService;
   public readonly scrapingCrawl: ScrapingCrawlService;
 
   constructor(config: ScrapelessConfig = {}) {
@@ -55,17 +56,15 @@ export class ScrapelessClient {
 
     if (isOnline === 'false') {
       // Ensure that the directory exists (create if it does not exist)
-      createRoot().then(() => {
-        createDataset('datasets');
-        createDataset('kv_stores');
-        createDataset('objects_stores');
-        createDataset('queues_stores');
-      });
+      createRoot();
+      this.storage = new LocalStorageService();
+    } else {
+      this.storage = new HttpStorageService(apiKey, storageURL, timeout);
     }
 
     this.actor = new ActorService(apiKey, actorURL, timeout);
     this.browser = new BrowserService(apiKey, browserURL, timeout);
-    this.storage = new StorageService(apiKey, storageURL, timeout);
+
     this.scraping = new ScrapingService(apiKey, baseApiURL, timeout);
     this.deepserp = new DeepSerpService(apiKey, baseApiURL, timeout);
     this.universal = new UniversalService(apiKey, baseApiURL, timeout);

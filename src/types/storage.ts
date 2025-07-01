@@ -124,12 +124,12 @@ export interface IDataset {
   /**
    * Actor ID associated with the dataset
    */
-  actorId: string;
+  actorId?: string;
 
   /**
    * Run ID associated with the dataset
    */
-  runId: string;
+  runId?: string;
 
   /**
    * Fields in the dataset
@@ -171,6 +171,12 @@ export interface IDatasetStorage {
    * @param params Pagination and filtering parameters
    */
   listDatasets: (params: IDatasetListParams) => Promise<IPagination<IDataset>>;
+
+  /**
+   * Get dataset by id
+   * @param datasetId Id of the dataset
+   */
+  getDataset: (datasetId: string) => Promise<IDataset>;
 
   /**
    * Create a new dataset
@@ -293,6 +299,41 @@ export interface IKVItem {
    * Size of the value in bytes
    */
   size: number;
+}
+
+/**
+ * Key item information
+ */
+export interface IKVKey {
+  /**
+   * Namespace ID
+   */
+  namespaceId: string;
+
+  /**
+   *  Key name
+   */
+  key: string;
+
+  /**
+   * Value associated with the key
+   */
+  value: string;
+
+  /**
+   * Expiration time in seconds; 0 means never expires
+   */
+  expiration?: number;
+
+  /**
+   * Size of the value in bytes
+   */
+  size: number;
+
+  /**
+   * Exact expiration time as a Date object
+   */
+  expireAt: Date;
 }
 
 /**
@@ -660,15 +701,12 @@ export interface IQueue {
   /**
    * Actor ID associated with the queue
    */
-  actor_id: string;
+  actorId: string;
 
   /**
    * Creation timestamp
    */
-  created_at: {
-    nanos: number;
-    seconds: number;
-  };
+  createdAt: Date;
 
   /**
    * Description of the queue
@@ -688,7 +726,7 @@ export interface IQueue {
   /**
    * Run ID associated with the queue
    */
-  run_id: string;
+  runId: string;
 
   /**
    * Queue statistics
@@ -718,20 +756,12 @@ export interface IQueue {
   /**
    * Team ID associated with the queue
    */
-  team_id: string;
+  teamId: string;
 
   /**
    * Last update timestamp
    */
-  updated_at: {
-    nanos: number;
-    seconds: number;
-  };
-
-  /**
-   * User ID associated with the queue
-   */
-  user_id: string;
+  updatedAt: Date;
 }
 
 /**
@@ -913,7 +943,7 @@ export interface IQueueStorage {
   /**
    * Pull messages from a queue
    * @param queueId ID of the queue
-   * * @param limit The maximum number of records to be returned， max 100, min 1
+   * @param limit The maximum number of records to be returned， max 100, min 1
    */
   pull: (queueId: string, limit?: number) => Promise<IQueueMessage[]>;
 

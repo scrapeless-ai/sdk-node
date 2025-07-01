@@ -1,4 +1,4 @@
-import { StorageService, CaptchaService, BrowserService, ProxiesService } from '../services';
+import { HttpStorageService, CaptchaService, BrowserService, ProxiesService, LocalStorageService } from '../services';
 import {
   IPaginationParams,
   IKVValueData,
@@ -8,8 +8,10 @@ import {
   IObjectListParams,
   IObjectCreateParams,
   IQueueCreateParams,
-  IQueueUpdateParams
+  IQueueUpdateParams,
+  IStorageService
 } from '../types';
+import { createRoot } from '../utils/memory';
 import { getEnv, getEnvWithDefault } from '../env';
 
 /**
@@ -19,7 +21,7 @@ export class Actor {
   /**
    * Storage service for datasets, key-value stores, objects, and queues
    */
-  storage: StorageService;
+  storage: IStorageService;
 
   /**
    * Captcha service for solving captchas
@@ -54,8 +56,16 @@ export class Actor {
     this.bucketId = getEnv('SCRAPELESS_BUCKET_ID');
     this.queueId = getEnv('SCRAPELESS_QUEUE_ID');
 
+    const isOnline = getEnvWithDefault('SCRAPELESS_IS_ONLINE', 'false');
     // Initialize all services
-    this.storage = new StorageService(apiKey, storageURL, timeout);
+    if (isOnline === 'false') {
+      createRoot();
+      this.datasetId = this.namespaceId = this.bucketId = this.queueId = 'default';
+      this.storage = new LocalStorageService();
+    } else {
+      this.storage = new HttpStorageService(apiKey, storageURL, timeout);
+    }
+
     this.browser = new BrowserService(apiKey, browserURL, timeout);
     this.captcha = new CaptchaService(apiKey, baseApiURL, timeout);
     this.proxy = new ProxiesService(apiKey, baseApiURL, timeout);
@@ -124,6 +134,14 @@ export class Actor {
    */
   async getDataset() {
     return await this.storage.dataset.getDataset(this.datasetId);
+  }
+
+  /**
+   * Create a new dataset
+   * @returns Dataset info
+   */
+  async createDataset(name: string) {
+    return await this.storage.dataset.createDataset(name);
   }
 
   /**
