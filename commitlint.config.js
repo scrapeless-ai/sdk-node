@@ -27,6 +27,7 @@ export default {
         'revert',
         'style',
         'test',
+        'wip'
       ],
     ],
   },
