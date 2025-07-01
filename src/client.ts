@@ -9,6 +9,7 @@ import {
   StorageService,
   ScrapingCrawlService
 } from './services';
+import { createRoot, createDataset } from './utils/memory';
 
 import { getEnv, getEnvWithDefault } from './env';
 
@@ -44,11 +45,22 @@ export class ScrapelessClient {
       config.browserApiUrl || getEnvWithDefault('SCRAPELESS_BROWSER_API_URL', 'https://browser.scrapeless.com');
     const scrapingCrawlURL =
       config.scrapingCrawlApiUrl || getEnvWithDefault('SCRAPELESS_CRAWL_API_URL', 'https://api.scrapeless.com');
+    const isOnline = getEnvWithDefault('SCRAPELESS_IS_ONLINE', 'false');
 
     if (!apiKey) {
       throw new ScrapelessError(
         'API key is required - either pass it in config or set SCRAPELESS_API_KEY environment variable'
       );
+    }
+
+    if (isOnline === 'false') {
+      // Ensure that the directory exists (create if it does not exist)
+      createRoot().then(() => {
+        createDataset('datasets');
+        createDataset('kv_stores');
+        createDataset('objects_stores');
+        createDataset('queues_stores');
+      });
     }
 
     this.actor = new ActorService(apiKey, actorURL, timeout);
