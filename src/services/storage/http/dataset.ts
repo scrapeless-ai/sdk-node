@@ -2,7 +2,7 @@
  * Dataset storage service for Actor
  * Provides a way to store structured data and retrieve it
  */
-import { BaseService } from '../base';
+import { BaseService } from '../../base';
 import {
   IDataset,
   IDatasetListParams,
@@ -10,7 +10,7 @@ import {
   IPagination,
   IPaginationParams,
   IStorageCommonResponse
-} from '../../types';
+} from '../../../types';
 
 /**
  * Dataset storage service implementation

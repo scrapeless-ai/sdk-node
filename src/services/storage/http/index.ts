@@ -2,8 +2,8 @@
  * Storage services for Scrapeless Actor SDK
  * This module provides access to Dataset, Key-Value Store, Object Storage, and Queue Storage.
  */
-import { BaseService } from '../base';
-import { IStorageService } from '../../types';
+import { BaseService } from '../../base';
+import { IStorageService } from '../../../types';
 import { DatasetStorage } from './dataset';
 import { KVStorage } from './kv';
 import { ObjectStorage } from './object';
@@ -12,7 +12,7 @@ import { QueueStorage } from './queue';
 /**
  * StorageService provides access to all Actor storage services
  */
-export class StorageService extends BaseService implements IStorageService {
+export class HttpStorageService extends BaseService implements IStorageService {
   /**
    * Dataset storage service for structured data
    */

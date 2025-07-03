@@ -16,7 +16,7 @@ async function datasetExample(client) {
     console.log(`Dataset created with ID: ${dataset.id}`);
 
     // Add items to the dataset
-    await client.storage.dataset.addItems([
+    await client.storage.dataset.addItems(dataset.id, [
       { name: 'Product 1', price: 19.99, category: 'Electronics' },
       { name: 'Product 2', price: 29.99, category: 'Home' },
       { name: 'Product 3', price: 9.99, category: 'Clothing' }
@@ -24,7 +24,7 @@ async function datasetExample(client) {
     console.log('Items added to dataset');
 
     // Get items from the dataset
-    const items = await client.storage.dataset.getItems({
+    const items = await client.storage.dataset.getItems(dataset.id, {
       page: 1,
       pageSize: 10
     });
@@ -48,7 +48,7 @@ async function kvStorageExample(client) {
     console.log(`KV namespace created with ID: ${namespace.id}`);
 
     // Set values in the namespace
-    await client.storage.kv.setValue({
+    await client.storage.kv.setValue(namespace.id, {
       key: 'appConfig',
       value: JSON.stringify({
         apiVersion: '1.0',
@@ -61,11 +61,11 @@ async function kvStorageExample(client) {
     console.log('Value set in KV store');
 
     // Get value from the namespace
-    const config = await client.storage.kv.getValue('appConfig');
+    const config = await client.storage.kv.getValue(namespace.id, 'appConfig');
     console.log('Retrieved config:', JSON.parse(config));
 
     // List keys in the namespace
-    const keys = await client.storage.kv.listKeys({ page: 1, pageSize: 10 });
+    const keys = await client.storage.kv.listKeys(namespace.id, { page: 1, pageSize: 10 });
     console.log('KV store keys:', keys);
 
     console.log('KV storage example completed\n');
@@ -89,13 +89,13 @@ async function objectStorageExample(client) {
     console.log(`Object bucket created with ID: ${bucket.id}`);
 
     // Upload a file to the bucket (in a real scenario, you would use a real file path)
-    const uploadResult = await client.storage.object.put({
+    const uploadResult = await client.storage.object.put(bucket.id, {
       file: 'example/sample-image.jpg'
     });
     console.log('File uploaded to object storage:', uploadResult);
 
     // List objects in the bucket
-    const objects = await client.storage.object.list({ page: 1, pageSize: 10 });
+    const objects = await client.storage.object.list(bucket.id, { page: 1, pageSize: 10 });
     console.log('Objects in bucket:', objects);
 
     console.log('Object storage example completed\n');
@@ -119,7 +119,7 @@ async function queueStorageExample(client) {
     console.log(`Queue created with ID: ${queue.id}`);
 
     // Push messages to the queue
-    const message1 = await client.storage.queue.push({
+    const message1 = await client.storage.queue.push(queue.id, {
       name: 'processImage',
       payload: JSON.stringify({
         imageId: '123',
@@ -131,7 +131,7 @@ async function queueStorageExample(client) {
     });
     console.log('Message pushed to queue:', message1);
 
-    const message2 = await client.storage.queue.push({
+    const message2 = await client.storage.queue.push(queue.id, {
       name: 'generateReport',
       payload: JSON.stringify({ reportType: 'monthly', format: 'pdf' }),
       retry: 2,
@@ -141,12 +141,12 @@ async function queueStorageExample(client) {
     console.log('Message pushed to queue:', message2);
 
     // Pull messages from the queue
-    const messages = await client.storage.queue.pull();
+    const messages = await client.storage.queue.pull(queue.id);
     console.log('Messages pulled from queue:', messages);
 
     // Acknowledge a message (if any)
     if (messages && messages.length > 0) {
-      await client.storage.queue.ack(messages[0].id);
+      await client.storage.queue.ack(queue.id, messages[0].id);
       console.log(`Message ${messages[0].id} acknowledged`);
     }
 
@@ -169,7 +169,7 @@ async function runExample() {
     // Run the examples
     await datasetExample(client);
     await kvStorageExample(client);
-    await objectStorageExample(client);
+    // await objectStorageExample(client);
     await queueStorageExample(client);
 
     console.log('All storage examples completed successfully');

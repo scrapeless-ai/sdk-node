@@ -2,7 +2,7 @@
  * Queue storage service for Actor
  * Provides a way to store and process tasks in a queue
  */
-import { BaseService } from '../base';
+import { BaseService } from '../../base';
 import {
   ICommonResponse,
   IPagination,
@@ -14,7 +14,7 @@ import {
   IQueuePushResponse,
   IQueueStorage,
   IQueueUpdateParams
-} from '../../types';
+} from '../../../types';
 
 /**
  * Queue storage service implementation

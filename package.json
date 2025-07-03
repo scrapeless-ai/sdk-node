@@ -52,6 +52,7 @@
     "puppeteer-core": "^24.9.0",
     "stack-trace": "1.0.0-pre2",
     "tsdown": "^0.11.13",
+    "uuid": "^11.1.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "winston-transport": "^4.9.0",

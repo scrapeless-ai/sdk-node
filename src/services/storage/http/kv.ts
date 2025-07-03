@@ -2,7 +2,7 @@
  * Key-Value storage service for Actor
  * Provides a way to store and retrieve named values
  */
-import { BaseService } from '../base';
+import { BaseService } from '../../base';
 import {
   ICommonResponse,
   IKVItem,
@@ -12,7 +12,7 @@ import {
   IPagination,
   IPaginationParams,
   IBulkSetValueResponse
-} from '../../types';
+} from '../../../types';
 
 /**
  * Key-Value storage service implementation

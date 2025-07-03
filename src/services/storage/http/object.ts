@@ -2,7 +2,7 @@
  * Object storage service for Actor
  * Provides a way to store and retrieve files and binary data
  */
-import { BaseService } from '../base';
+import { BaseService } from '../../base';
 import {
   ICommonResponse,
   IObjectBucket,
@@ -15,7 +15,7 @@ import {
   IObjectStorage,
   IObjectUploadParams,
   IObjectUploadResponse
-} from '../../types';
+} from '../../../types';
 
 /**
  * Object storage service implementation
