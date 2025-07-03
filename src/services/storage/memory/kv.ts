@@ -38,7 +38,7 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
     let entries: fs.Dirent[];
     try {
       entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
-    } catch (err) {
+    } catch {
       return {
         items: [],
         total: 0,
@@ -64,7 +64,7 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
           runId: meta.runId || '',
           stats: { count: 0, size: 0 }
         });
-      } catch (e) {
+      } catch {
         continue;
       }
     }
@@ -177,7 +177,7 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
     try {
       await this.rm(dirPath, { recursive: true, force: true });
       return { success: true };
-    } catch (e) {
+    } catch {
       return { success: false };
     }
   }
@@ -258,7 +258,7 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
     try {
       await this.rm(filePath);
       return { success: true };
-    } catch (e) {
+    } catch {
       return { success: false };
     }
   }

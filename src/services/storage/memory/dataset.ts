@@ -35,7 +35,7 @@ export class LocalDatasetStorage extends MemoryService implements IDatasetStorag
     let entries: fs.Dirent[];
     try {
       entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
-    } catch (err) {
+    } catch {
       return {
         items: [],
         total: 0,
@@ -53,7 +53,7 @@ export class LocalDatasetStorage extends MemoryService implements IDatasetStorag
         const file = await this.readFile(metaPath);
         const meta = JSON.parse(file);
         allDatasets.push(meta);
-      } catch (e) {
+      } catch {
         continue;
       }
     }

@@ -57,7 +57,7 @@ export abstract class MemoryService {
         if (metaData.name === name) {
           return true;
         }
-      } catch (e) {
+      } catch {
         continue;
       }
     }

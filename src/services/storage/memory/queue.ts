@@ -39,7 +39,7 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
     let entries: fs.Dirent[];
     try {
       entries = await fs.promises.readdir(dirPath, { withFileTypes: true });
-    } catch (err) {
+    } catch {
       return {
         items: [],
         total: 0,
@@ -56,7 +56,7 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
         const file = await this.readFile(metaPath);
         const meta = JSON.parse(file);
         allQueues.push(meta);
-      } catch (e) {
+      } catch {
         continue;
       }
     }
@@ -163,7 +163,7 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
     try {
       await this.rm(dirPath, { recursive: true, force: true });
       return { success: true };
-    } catch (e) {
+    } catch {
       return { success: false };
     }
   }
@@ -214,7 +214,7 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
     let files: string[];
     try {
       files = await fs.promises.readdir(dirPath);
-    } catch (e) {
+    } catch {
       return [];
     }
     files = files.filter(f => f.endsWith('.json') && f !== 'metadata.json');
@@ -267,7 +267,7 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
         return { success: true };
       }
       return { success: false };
-    } catch (e) {
+    } catch {
       return { success: false };
     }
   }
