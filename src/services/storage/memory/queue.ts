@@ -99,8 +99,12 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
       }
     };
     const metaPath = path.join(dirPath, 'metadata.json');
-    await this.writeJsonFile(metaPath, meta);
-    return { id, name: data.name };
+    try {
+      await this.writeJsonFile(metaPath, meta);
+      return { id, name: data.name };
+    } catch {
+      throw new Error('Create queue failed');
+    }
   }
 
   /**
@@ -143,14 +147,14 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
     try {
       const file = await this.readFile(metaPath);
       meta = JSON.parse(file);
+      if (data.name) meta.name = data.name;
+      if (data.description) meta.description = data.description;
+      meta.updatedAt = new Date();
+      await this.writeJsonFile(metaPath, meta);
+      return null;
     } catch {
       throw new Error('Queue not found');
     }
-    if (data.name) meta.name = data.name;
-    if (data.description) meta.description = data.description;
-    meta.updatedAt = new Date();
-    await this.writeJsonFile(metaPath, meta);
-    return null;
   }
 
   /**
@@ -199,8 +203,12 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
       reenterTime: ''
     };
     const msgPath = path.join(dirPath, `${id}.json`);
-    await this.writeJsonFile(msgPath, msg);
-    return { msgId: id };
+    try {
+      await this.writeJsonFile(msgPath, msg);
+      return { msgId: id };
+    } catch {
+      throw new Error('Queue push failed');
+    }
   }
 
   /**
@@ -226,24 +234,24 @@ export class LocalQueueStorage extends MemoryService implements IQueueStorage {
       try {
         const data = await this.readFile(filePath);
         msg = JSON.parse(data);
+        // Filter out completed, failed, expired, or over-retried messages
+        if (
+          msg.successAt > 0 ||
+          msg.failedAt > 0 ||
+          msg.deadline < Math.floor(now.getTime() / 1000) ||
+          (msg.reenterTime && new Date(msg.reenterTime) > now) ||
+          msg.retried >= msg.retry
+        ) {
+          await this.rm(filePath);
+          continue;
+        }
+        msg.reenterTime = new Date(now.getTime() + (msg.timeout || 0) * 1000);
+        msg.retried = (msg.retried || 0) + 1;
+        await this.writeJsonFile(filePath, msg);
+        msgs.push(msg);
       } catch {
         continue;
       }
-      // Filter out completed, failed, expired, or over-retried messages
-      if (
-        msg.successAt > 0 ||
-        msg.failedAt > 0 ||
-        msg.deadline < Math.floor(now.getTime() / 1000) ||
-        (msg.reenterTime && new Date(msg.reenterTime) > now) ||
-        msg.retried >= msg.retry
-      ) {
-        await this.rm(filePath);
-        continue;
-      }
-      msg.reenterTime = new Date(now.getTime() + (msg.timeout || 0) * 1000);
-      msg.retried = (msg.retried || 0) + 1;
-      await this.writeJsonFile(filePath, msg);
-      msgs.push(msg);
     }
     // Sort by updateTime if present
     if (msgs.length > 0 && 'updateTime' in msgs[0]) {

@@ -91,28 +91,32 @@ export class LocalDatasetStorage extends MemoryService implements IDatasetStorag
    * @param name Dataset name
    */
   async createDataset(name: string): Promise<IDataset> {
-    if (!name) {
-      throw new Error('name must not be empty');
+    try {
+      if (!name) {
+        throw new Error('name must not be empty');
+      }
+      const exist = await this.isNameExists(this.getStoragePath(this.datasetDir), name);
+      if (exist) {
+        throw new Error('The name of the dataset already exists');
+      }
+      const id = uuidv4();
+      const dirPath = this.getStoragePath(path.join(this.datasetDir, id));
+      await this.mkdir(dirPath);
+      const now = new Date();
+      const meta: IDataset = {
+        id,
+        name,
+        createdAt: now,
+        updatedAt: now,
+        fields: [],
+        stats: { count: 0, size: 0 }
+      };
+      const metaPath = path.join(dirPath, 'metadata.json');
+      await this.writeJsonFile(metaPath, meta);
+      return meta;
+    } catch {
+      throw new Error('Create dataset failed');
     }
-    const exist = await this.isNameExists(this.getStoragePath(this.datasetDir), name);
-    if (exist) {
-      throw new Error('The name of the dataset already exists');
-    }
-    const id = uuidv4();
-    const dirPath = this.getStoragePath(path.join(this.datasetDir, id));
-    await this.mkdir(dirPath);
-    const now = new Date();
-    const meta: IDataset = {
-      id,
-      name,
-      createdAt: now,
-      updatedAt: now,
-      fields: [],
-      stats: { count: 0, size: 0 }
-    };
-    const metaPath = path.join(dirPath, 'metadata.json');
-    await this.writeJsonFile(metaPath, meta);
-    return meta;
   }
 
   /**
@@ -133,13 +137,13 @@ export class LocalDatasetStorage extends MemoryService implements IDatasetStorag
     try {
       const file = await this.readFile(metaPath);
       meta = JSON.parse(file);
+      meta.name = name;
+      meta.updatedAt = new Date();
+      await this.writeJsonFile(metaPath, meta);
+      return meta;
     } catch {
       throw new Error('Dataset not found');
     }
-    meta.name = name;
-    meta.updatedAt = new Date();
-    await this.writeJsonFile(metaPath, meta);
-    return meta;
   }
 
   /**
@@ -177,31 +181,36 @@ export class LocalDatasetStorage extends MemoryService implements IDatasetStorag
     } catch {
       return { success: false, message: 'Dataset not found' };
     }
-    // Get current max index
-    const files = await fs.promises.readdir(dirPath);
-    let maxIndex = 0;
-    files.forEach(f => {
-      if (/^\d{8}\.json$/.test(f)) {
-        const idx = parseInt(f.slice(0, 8), 10);
-        if (idx > maxIndex) maxIndex = idx;
+
+    try {
+      // Get current max index
+      const files = await fs.promises.readdir(dirPath);
+      let maxIndex = 0;
+      files.forEach(f => {
+        if (/^\d{8}\.json$/.test(f)) {
+          const idx = parseInt(f.slice(0, 8), 10);
+          if (idx > maxIndex) maxIndex = idx;
+        }
+      });
+      const fieldsSet = new Set<string>(meta.fields || []);
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        Object.keys(item).forEach(key => fieldsSet.add(key));
+        const index = maxIndex + i + 1;
+        const fileName = `${index.toString().padStart(8, '0')}.json`;
+        const filePath = path.join(dirPath, fileName);
+        await this.writeJsonFile(filePath, item);
       }
-    });
-    const fieldsSet = new Set<string>(meta.fields || []);
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      Object.keys(item).forEach(key => fieldsSet.add(key));
-      const index = maxIndex + i + 1;
-      const fileName = `${index.toString().padStart(8, '0')}.json`;
-      const filePath = path.join(dirPath, fileName);
-      await this.writeJsonFile(filePath, item);
+      meta.fields = Array.from(fieldsSet);
+      // Update metadata
+      meta.updatedAt = new Date();
+      meta.stats = meta.stats || { count: 0, size: 0 };
+      meta.stats.count += items.length;
+      await this.writeJsonFile(metaPath, meta);
+      return { success: true, message: 'Items added' };
+    } catch {
+      throw new Error('Add to dataset failed');
     }
-    meta.fields = Array.from(fieldsSet);
-    // Update metadata
-    meta.updatedAt = new Date();
-    meta.stats = meta.stats || { count: 0, size: 0 };
-    meta.stats.count += items.length;
-    await this.writeJsonFile(metaPath, meta);
-    return { success: true, message: 'Items added' };
   }
 
   /**
@@ -217,6 +226,15 @@ export class LocalDatasetStorage extends MemoryService implements IDatasetStorag
     let files: string[];
     try {
       files = await fs.promises.readdir(dirPath);
+      files = files.filter(f => /^\d{8}\.json$/.test(f));
+      files.sort();
+      const items: T[] = [];
+      for (const file of files) {
+        const filePath = path.join(dirPath, file);
+        const data = await this.readFile(filePath);
+        items.push(JSON.parse(data));
+      }
+      return this.paginateArray(items, params.page, params.pageSize);
     } catch {
       return {
         items: [],
@@ -226,14 +244,5 @@ export class LocalDatasetStorage extends MemoryService implements IDatasetStorag
         totalPage: 0
       };
     }
-    files = files.filter(f => /^\d{8}\.json$/.test(f));
-    files.sort();
-    const items: T[] = [];
-    for (const file of files) {
-      const filePath = path.join(dirPath, file);
-      const data = await this.readFile(filePath);
-      items.push(JSON.parse(data));
-    }
-    return this.paginateArray(items, params.page, params.pageSize);
   }
 }
