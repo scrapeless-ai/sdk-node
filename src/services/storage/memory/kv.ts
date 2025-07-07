@@ -121,11 +121,15 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
       runId: ''
     };
     const metaPath = path.join(dirPath, 'metadata.json');
-    await this.writeJsonFile(metaPath, meta);
-    return {
-      ...meta,
-      stats: { size: 0, count: 0 }
-    };
+    try {
+      await this.writeJsonFile(metaPath, meta);
+      return {
+        ...meta,
+        stats: { size: 0, count: 0 }
+      };
+    } catch {
+      throw new Error('Create namespace failed');
+    }
   }
 
   /**
@@ -197,13 +201,13 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
     try {
       const file = await this.readFile(metaPath);
       meta = JSON.parse(file);
+      meta.name = name;
+      meta.updatedAt = new Date();
+      await this.writeJsonFile(metaPath, meta);
+      return { success: true };
     } catch {
       return { success: false };
     }
-    meta.name = name;
-    meta.updatedAt = new Date();
-    await this.writeJsonFile(metaPath, meta);
-    return { success: true };
   }
 
   /**
@@ -232,11 +236,15 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
     files.sort();
     const items: IKVItem[] = [];
     for (const file of files) {
-      const filePath = path.join(dirPath, file);
-      const data = await this.readFile(filePath);
-      const kv = JSON.parse(data) as IKVKey;
-      if (kv.expireAt && new Date(kv.expireAt) < new Date()) continue;
-      items.push({ key: kv.key, size: kv.size });
+      try {
+        const filePath = path.join(dirPath, file);
+        const data = await this.readFile(filePath);
+        const kv = JSON.parse(data) as IKVKey;
+        if (kv.expireAt && new Date(kv.expireAt) < new Date()) continue;
+        items.push({ key: kv.key, size: kv.size });
+      } catch {
+        continue;
+      }
     }
     return this.paginateArray(items, params.page, params.pageSize);
   }
@@ -278,11 +286,15 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
     let successfulKeyCount = 0;
     const unsuccessfulKeys = [];
     for (const item of data) {
-      const res = await this.setValue(namespaceId, item);
-      if (res.success) {
-        successfulKeyCount++;
-      } else {
-        unsuccessfulKeys.push(item.key);
+      try {
+        const res = await this.setValue(namespaceId, item);
+        if (res.success) {
+          successfulKeyCount++;
+        } else {
+          unsuccessfulKeys.push(item.key);
+        }
+      } catch {
+        continue;
       }
     }
     return { successfulKeyCount, unsuccessfulKeys };
@@ -301,7 +313,11 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
       return { success: false };
     }
     for (const key of keys) {
-      await this.delValue(namespaceId, key);
+      try {
+        await this.delValue(namespaceId, key);
+      } catch {
+        continue;
+      }
     }
     return { success: true };
   }
@@ -337,8 +353,12 @@ export class LocalKVStorage extends MemoryService implements IKVStorage {
       expireAt,
       size: Buffer.byteLength(data.value)
     };
-    await this.writeJsonFile(filePath, kv);
-    return { success: true };
+    try {
+      await this.writeJsonFile(filePath, kv);
+      return { success: true };
+    } catch {
+      throw new Error('Set kv failed');
+    }
   }
 
   /**

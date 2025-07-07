@@ -36,3 +36,4 @@ design-docs/
 scrapeless-actor-sdk-node/
 examples/*.png
 scrapeless-demo-*.json
+/storage
