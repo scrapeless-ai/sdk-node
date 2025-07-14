@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.6.1...v1.7.0) (2025-07-14)
+
+### ✨ Features
+
+- **browser:** add create session http method ([2b60780](https://github.com/scrapeless-ai/sdk-node/commit/2b6078027082ab0e3c2b3141768c49bdc292eb1b))
+- **browser:** handle create browser http error ([4ff1b48](https://github.com/scrapeless-ai/sdk-node/commit/4ff1b489cad98e5631f9c711b1e50951c80bb785))
+
 ### [1.6.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.6.0...v1.6.1) (2025-07-07)
 
 ### 🐛 Bug Fixes
