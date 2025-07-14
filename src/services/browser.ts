@@ -103,6 +103,14 @@ export class BrowserService extends BaseService {
         {},
         true
       );
+      if (!task.data.success) {
+        throw new Error(`Failed to create browser session: ${JSON.stringify(task.data)}`);
+      }
+
+      if (!task.data.taskId) {
+        throw new Error('Failed to create browser session: taskId is missing');
+      }
+
       return {
         browserWSEndpoint: `wss://browser.scrapeless.com/browser/${task.data.taskId}?token=${this.apiKey}`
       };
