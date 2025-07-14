@@ -17,6 +17,11 @@ export interface ICreateBrowser {
   extension_ids?: string;
 }
 
+export interface ICreateBrowserHttpResponse {
+  success: boolean;
+  taskId: string;
+}
+
 /**
  * Browser session creation response
  */

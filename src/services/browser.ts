@@ -1,7 +1,7 @@
 import { BaseService } from './base';
 import { ExtensionService } from './extension';
 import { getEnvWithDefault } from '../env';
-import { ICreateBrowser, ICreateBrowserResponse } from '../types';
+import { ICreateBrowser, ICreateBrowserResponse, ICreateBrowserHttpResponse } from '../types';
 
 // Define default parameters
 const DEFAULT_BROWSER_OPTIONS: ICreateBrowser = {
@@ -66,5 +66,49 @@ export class BrowserService extends BaseService {
    */
   async createAsync(options: ICreateBrowser = {}): Promise<ICreateBrowserResponse> {
     return this.create(options);
+  }
+
+  /**
+   * Create a browser session
+   * @param options Browser session configuration
+   * @returns Response containing devtoolsUrl
+   */
+  async createSession(options: ICreateBrowser = {}): Promise<ICreateBrowserResponse> {
+    // Merge default options with user provided options
+    const data = { ...DEFAULT_BROWSER_OPTIONS, ...options };
+
+    // Build parameter object directly, handle special type conversions
+    const params: { [key: string]: string } = {
+      token: this.apiKey,
+      session_name: data.session_name || '',
+      session_ttl: data.session_ttl?.toString() || '',
+      session_recording: data.session_recording?.toString() || '',
+      proxy_country: data.proxy_country || 'ANY',
+      proxy_url: data.proxy_url || '',
+      fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : '',
+      extension_ids: data.extension_ids || ''
+    };
+
+    if (data.proxy_url) {
+      delete params.proxy_country;
+    }
+
+    const searchParams = new URLSearchParams(params);
+
+    try {
+      const task = await this.request<ICreateBrowserHttpResponse, true>(
+        `/browser?${searchParams.toString()}`,
+        'GET',
+        undefined,
+        {},
+        true
+      );
+      return {
+        browserWSEndpoint: `wss://browser.scrapeless.com/browser/${task.data.taskId}?token=${this.apiKey}`
+      };
+    } catch (error) {
+      // Handle errors gracefully
+      throw new Error(`Failed to create browser session: ${error}`);
+    }
   }
 }
