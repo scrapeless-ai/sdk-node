@@ -175,6 +175,15 @@ const run = await client.actor.run(actor.id, {
 console.log('Actor run result:', run);
 ```
 
+### Profiles
+
+Manage browser profiles for persistent sessions.
+
+```javascript
+const createResponse = await client.profiles.create('My Profile');
+console.log('Profile created:', createResponse);
+```
+
 ## 🔧 API Reference
 
 ### Client Configuration

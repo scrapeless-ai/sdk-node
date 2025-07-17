@@ -138,7 +138,8 @@ const logger = winston.createLogger({
   levels: LOG_LEVELS,
   level: process.env.SCRAPELESS_LOG_LEVEL || LogLevel.INFO,
   format: formatWithPrefix,
-  transports
+  transports,
+  silent: process.env.SCRAPELESS_LOG_DISABLED === 'true'
 });
 
 // Store logger instances by prefix
@@ -146,6 +147,7 @@ const loggerInstances: Map<string, winston.Logger> = new Map();
 
 // Create custom logger with prefix
 const getLoggerWithPrefix = (prefix: string): winston.Logger => {
+  logger.silent = process.env.SCRAPELESS_LOG_DISABLED === 'true';
   if (!prefix) return logger;
 
   if (loggerInstances.has(prefix)) {

@@ -8,7 +8,8 @@ import {
   ActorService,
   HttpStorageService,
   LocalStorageService,
-  ScrapingCrawlService
+  ScrapingCrawlService,
+  ProfilesService
 } from './services';
 import { createRoot } from './utils/memory';
 
@@ -33,6 +34,7 @@ export class ScrapelessClient {
   public readonly actor: ActorService;
   public readonly storage: IStorageService;
   public readonly scrapingCrawl: ScrapingCrawlService;
+  public readonly profiles: ProfilesService;
 
   constructor(config: ScrapelessConfig = {}) {
     const apiKey = config.apiKey || getEnv('SCRAPELESS_API_KEY');
@@ -70,5 +72,6 @@ export class ScrapelessClient {
     this.universal = new UniversalService(apiKey, baseApiURL, timeout);
     this.proxies = new ProxiesService(apiKey, baseApiURL, timeout);
     this.scrapingCrawl = new ScrapingCrawlService(apiKey, scrapingCrawlURL, config.timeout || 0);
+    this.profiles = new ProfilesService(apiKey, baseApiURL, timeout);
   }
 }

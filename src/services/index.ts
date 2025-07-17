@@ -11,3 +11,4 @@ export * from './storage/http';
 export * from './storage/memory';
 export * from './crawl';
 export * from './memory';
+export * from './profiles';
