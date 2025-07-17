@@ -56,7 +56,7 @@ pnpm add @scrapeless-ai/sdk
 
 ### Prerequisite
 
-[Log in](https://app.dashboard.scrapeless.com) to the Scrapeless Dashboard and get the API Key
+[Log in](https://app.scrapeless.com) to the Scrapeless Dashboard and get the API Key
 
 ### Basic Setup
 
@@ -117,12 +117,11 @@ await browser.close();
 ```
 
 ### Crawl
+
 Extract data from single pages or traverse entire domains, exporting in formats including Markdown, JSON, HTML, screenshots, and links.
 
 ```javascript
-const result = await client.scrapingCrawl.scrapeUrl(
-  "https://example.com"
-);
+const result = await client.scrapingCrawl.scrapeUrl('https://example.com');
 
 console.log(result);
 ```
@@ -174,6 +173,15 @@ const run = await client.actor.run(actor.id, {
 });
 
 console.log('Actor run result:', run);
+```
+
+### Profiles
+
+Manage browser profiles for persistent sessions.
+
+```javascript
+const createResponse = await client.profiles.create('My Profile');
+console.log('Profile created:', createResponse);
 ```
 
 ## 🔧 API Reference

@@ -12,3 +12,4 @@ export * from './runner';
 export * from './storage';
 export * from './scraping-crawl';
 export * from './extension';
+export * from './profile';
