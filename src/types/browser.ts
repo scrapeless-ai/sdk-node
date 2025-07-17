@@ -16,7 +16,7 @@ export interface ICreateBrowser {
   fingerprint?: object;
   extension_ids?: string;
   profile_id?: string;
-  persist?: boolean;
+  profile_persist?: boolean;
 }
 
 /**
