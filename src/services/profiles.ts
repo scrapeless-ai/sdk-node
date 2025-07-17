@@ -8,7 +8,7 @@ import {
 } from '../types';
 
 export class ProfilesService extends BaseService {
-  private readonly basePath = '/api/v1/browser-profiles';
+  private readonly basePath = '/api/v1/profiles';
   constructor(apiKey: string, baseUrl: string, timeout: number) {
     super(apiKey, baseUrl, timeout);
   }
