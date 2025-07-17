@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.7.0...v1.8.0) (2025-07-17)
+
+### ✨ Features
+
+- **profiles:** add browser profiles module ([5117932](https://github.com/scrapeless-ai/sdk-node/commit/5117932d27f3cb3ba06092245a2d6e202d192780))
+
+### 🐛 Bug Fixes
+
+- **browser:** fix profile use ([b9f956e](https://github.com/scrapeless-ai/sdk-node/commit/b9f956ec4401afa97c99cc2bbdc5d8dee648480b))
+- **profiles:** rename browser param key ([08d64d4](https://github.com/scrapeless-ai/sdk-node/commit/08d64d4264b3ef120a4d24e32288f4dc7a5f34d1))
+- **profile:** update base path ([d87e77e](https://github.com/scrapeless-ai/sdk-node/commit/d87e77ee9d0799618d13eb4a089e529afdca0c13))
+
 ## [1.7.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.6.1...v1.7.0) (2025-07-14)
 
 ### ✨ Features
