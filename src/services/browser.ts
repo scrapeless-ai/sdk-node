@@ -38,7 +38,9 @@ export class BrowserService extends BaseService {
       proxy_country: data.proxy_country,
       proxy_url: data.proxy_url,
       fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : undefined,
-      extension_ids: data.extension_ids
+      extension_ids: data.extension_ids,
+      profile_id: data.profile_id,
+      profile_persist: data.profile_persist
     };
 
     if (data.proxy_url) {
