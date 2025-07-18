@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.8.0...v1.8.1) (2025-07-18)
+
+### 🐛 Bug Fixes
+
+- **actor:** fix actor.updateDataset function name spell mistake ([d975aa5](https://github.com/scrapeless-ai/sdk-node/commit/d975aa512d827b23b7fff0445fbd87c61aac7e4f))
+
 ## [1.8.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.7.0...v1.8.0) (2025-07-17)
 
 ### ✨ Features
