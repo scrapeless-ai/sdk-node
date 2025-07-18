@@ -140,7 +140,7 @@ describe('ActorService', () => {
 
   it('should update a dataset', async () => {
     const newName = 'updated-dataset';
-    const result = await actor.updateDateset(newName);
+    const result = await actor.updateDataset(newName);
     console.log('Update a dataset result:', result);
     expect(result.name).toBe(newName);
   });

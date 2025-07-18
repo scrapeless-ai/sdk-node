@@ -116,7 +116,7 @@ export class Actor {
    * @param name New name for the dataset
    * @returns The updated dataset info
    */
-  async updateDateset(name: string) {
+  async updateDataset(name: string) {
     return await this.storage.dataset.updateDataset(this.datasetId, name);
   }
 
