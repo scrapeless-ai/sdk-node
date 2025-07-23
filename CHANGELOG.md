@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.2](https://github.com/scrapeless-ai/sdk-node/compare/v1.8.1...v1.8.2) (2025-07-23)
+
+### 🐛 Bug Fixes
+
+- **profile:** fix gatewat address ([d39892f](https://github.com/scrapeless-ai/sdk-node/commit/d39892fde2323c808aaeb72f2eed85030f1e7739))
+
 ### [1.8.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.8.0...v1.8.1) (2025-07-18)
 
 ### 🐛 Bug Fixes
