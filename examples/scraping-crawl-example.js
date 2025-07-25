@@ -50,7 +50,7 @@ async function exampleBatchScrape() {
     const scrapeResponse = await client.batchScrapeUrls(['https://example.com/', 'https://example.com/'], {
       formats: ['markdown', 'html', 'links', 'screenshot@fullPage'],
       browserOptions: {
-        session_name: 'scrapingCrawl_batchScrape'
+        sessionName: 'scrapingCrawl_batchScrape'
       }
     });
     if (scrapeResponse) {

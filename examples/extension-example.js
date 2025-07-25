@@ -31,10 +31,10 @@ async function getExtension(extensionId) {
 
 async function useExtension(extensionIds) {
   const { browserWSEndpoint } = scrapingBrowser.create({
-    session_name: 'use-extension',
-    session_ttl: 180,
-    session_recording: true,
-    extension_ids: extensionIds
+    sessionName: 'use-extension',
+    sessionTTL: 180,
+    sessionRecording: true,
+    extensionIds: extensionIds
   });
 
   const browser = await puppeteer.connect({

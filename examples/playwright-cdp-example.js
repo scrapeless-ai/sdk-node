@@ -14,9 +14,9 @@ import { Playwright, createPlaywrightCDPSession } from '../dist/index.js';
 async function runExample() {
   console.log('Creating Puppeteer browser instance...');
   const browser = await Playwright.connect({
-    session_name: 'cdp-example-session',
-    session_ttl: 300,
-    proxy_country: 'US'
+    sessionName: 'cdp-example-session',
+    sessionTTL: 300,
+    proxyCountry: 'US'
   });
 
   try {

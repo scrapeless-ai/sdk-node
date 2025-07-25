@@ -157,9 +157,9 @@ async function runActorExample() {
       /*
       // Create browser session
       const sessionOptions = {
-        session_ttl: 180,
-        proxy_country: input.useProxy ? 'US' : null,
-        session_recording: true,
+        sessionTTL: 180,
+        proxyCountry: input.useProxy ? 'US' : null,
+        sessionRecording: true,
         ...input.options
       };
       
@@ -246,7 +246,7 @@ async function runActorExample() {
         // Get proxy
         const proxy = await actor.proxy.getSession({
           country: 'US',
-          session_ttl: 180
+          sessionTTL: 180
         });
         
         console.log('Proxy session:', proxy);

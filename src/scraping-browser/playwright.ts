@@ -321,14 +321,14 @@ export class ScrapelessPlaywright extends BaseBrowser {
       const { browserWSEndpoint } = this.browserService.create(config);
       logger.debug('Connecting to browser via Scrapeless API', {
         browserWSEndpoint,
-        sessionName: config.session_name,
-        proxyCountry: config.proxy_country
+        sessionName: config.sessionName,
+        proxyCountry: config.proxyCountry
       });
 
       // Connect using Playwright
       const browser = await chromium.connectOverCDP(browserWSEndpoint);
       logger.info('Successfully connected to Scrapeless browser', {
-        sessionName: config.session_name
+        sessionName: config.sessionName
       });
 
       return browser;
@@ -336,8 +336,8 @@ export class ScrapelessPlaywright extends BaseBrowser {
       logger.error('Failed to connect to Scrapeless browser', {
         error,
         config: {
-          sessionName: config.session_name,
-          proxyCountry: config.proxy_country
+          sessionName: config.sessionName,
+          proxyCountry: config.proxyCountry
         }
       });
       throw new Error(`Failed to connect to browser: ${error instanceof Error ? error.message : String(error)}`);
@@ -353,8 +353,8 @@ export class ScrapelessPlaywright extends BaseBrowser {
  * import { Playwright } from '@scrapeless-ai/sdk';
  *
  * const browser = await Playwright.connect({
- *   session_name: 'my-session',
- *   proxy_country: 'US'
+ *   sessionName: 'my-session',
+ *   proxyCountry: 'US'
  * });
  * ```
  */

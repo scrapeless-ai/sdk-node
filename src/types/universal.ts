@@ -1,3 +1,5 @@
+import { KeyInput } from 'puppeteer-core';
+
 /**
  * Universal Scraping API Request Parameters
  */
@@ -13,47 +15,138 @@ export interface UniversalProxy {
 
 export interface UniversalJsRenderInput {
   url: string;
-  headless?: boolean;
-  js_render?: boolean;
-  js_instructions?: JsInstruction[];
-  block?: {
-    resources: string[];
-  };
+  jsRender: CreateJsRenderOptions;
 }
 
-export interface JsInstruction {
+export interface CreateJsRenderOptions {
+  /** enable JS rendering */
+  enabled: boolean;
+  /** whether processing in headless mode */
+  headless: boolean;
   /**
-   * Click element
+   * when to consider waiting succeeds. given an array of event strings, waiting is considered to be successful after all events have been fired.
+   *
+   * Allowed values: `load`,`domcontentloaded`,`networkidle2`,`networkidle0`
    */
-  click?: Array<number | string>;
-  /**
-   * Execute custom javascript code
-   */
-  evaluate?: string;
-  /**
-   * Fill form
-   */
-  fill?: string[];
-  /**
-   * [Keyboard
-   * Operations](https://docs.scrapeless.com/en/web-unlocker/features/js-render/#keyboard-operations)
-   */
-  keyboard?: Array<number | string>;
-  wait?: number;
-  /**
-   * Wait for element
-   */
-  wait_for?: Array<number | string>;
-  [property: string]: any;
+  waitUntil?: string;
+  /** resources or urls to block */
+  block?: {
+    resources?: string[];
+    urls?: string[];
+  };
+  /** [JavaScript Instructions Reference](https://docs.scrapeless.com/en/universal-scraping-api/features/js-render/#javascript-instructions-reference) */
+  instructions?: JsInstruction[];
+  /** response config */
+  response: UniversalResponseParams;
 }
+
+type WaitAction = {
+  /** Wait for a number of ms */
+  wait: number;
+};
+
+type WaitForAction = {
+  /** Wait for a selector to be visible [selector, delay] */
+  waitFor: [string, number];
+};
+
+type ClickAction = {
+  /** Click on a selector [selector, delay] */
+  click: [string, number];
+};
+
+type FillAction = {
+  /** Fill a selector with a value [selector, value] */
+  fill: [string, any];
+};
+
+type CheckAction = {
+  /** Check a checkbox [selector] */
+  check: string;
+};
+
+type UncheckAction = {
+  /** Uncheck a checkbox [selector] */
+  uncheck: string;
+};
+
+type EvaluateAction = {
+  /** Evaluate a script [js script] */
+  evaluate: string;
+};
+
+type KeyboardType = 'up' | 'press' | 'type' | 'down';
+
+type KeyboardAction = {
+  /** Keyboard input [KeyInput, KeyboardType, delay(ms)] */
+  keyboard: [KeyInput, KeyboardType, number];
+};
+
+export type JsInstruction =
+  | WaitAction
+  | WaitForAction
+  | ClickAction
+  | FillAction
+  | CheckAction
+  | UncheckAction
+  | EvaluateAction
+  | KeyboardAction;
+
+export type UniversalContentOutputType =
+  | 'phone_numbers'
+  | 'headings'
+  | 'images'
+  | 'audios'
+  | 'videos'
+  | 'links'
+  | 'menus'
+  | 'hashtags'
+  | 'emails'
+  | 'metadata'
+  | 'tables'
+  | 'favicon';
+
+interface HtmlResponseOptions {
+  selector?: string;
+}
+
+interface PlaintextResponseOptions {
+  selector?: string;
+}
+
+interface MarkdownResponseOptions {
+  selector?: string;
+}
+
+interface ImageResponseOptions {
+  selector?: string;
+  fullPage?: boolean;
+}
+
+interface NetworkResponseOptions {
+  urls?: string[];
+  status?: number[];
+  methods?: string[];
+}
+
+interface ContentResponseOptions {
+  selector?: string;
+  outputs?: UniversalContentOutputType[];
+}
+
+export type UniversalResponseParams =
+  | { type: 'html'; options?: HtmlResponseOptions }
+  | { type: 'plaintext'; options?: PlaintextResponseOptions }
+  | { type: 'markdown'; options?: MarkdownResponseOptions }
+  | { type: 'png'; options?: ImageResponseOptions }
+  | { type: 'jpeg'; options?: ImageResponseOptions }
+  | { type: 'network'; options?: NetworkResponseOptions }
+  | { type: 'content'; options?: ContentResponseOptions };
 
 export interface UniversalWebUnlockerInput {
   url: string;
-  type: string;
-  redirect: boolean;
   method: string;
-  request_id?: string;
-  extractor?: string;
+  redirect?: boolean;
   header?: Record<string, string>;
 }
 

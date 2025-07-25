@@ -5,9 +5,9 @@ import { ICreateBrowser, ICreateBrowserResponse, ICreateBrowserHttpResponse } fr
 
 // Define default parameters
 const DEFAULT_BROWSER_OPTIONS: ICreateBrowser = {
-  session_name: '',
-  session_ttl: 180,
-  proxy_country: 'ANY'
+  sessionName: '',
+  sessionTTL: 180,
+  proxyCountry: 'ANY'
 };
 
 export class BrowserService extends BaseService {
@@ -21,30 +21,30 @@ export class BrowserService extends BaseService {
   }
 
   /**
-   * Create a browser session
+   * Build browser search params
    * @param options Browser session configuration
-   * @returns Response containing devtoolsUrl
+   * @returns URLSearchParams
    */
-  create(options: ICreateBrowser = {}): ICreateBrowserResponse {
+  private buildBrowserSearchParams(options: ICreateBrowser) {
     // Merge default options with user provided options
     const data = { ...DEFAULT_BROWSER_OPTIONS, ...options };
 
     // Build parameter object directly, handle special type conversions
     const params = {
       token: this.apiKey,
-      session_name: data.session_name,
-      session_ttl: data.session_ttl?.toString(),
-      session_recording: data.session_recording?.toString(),
-      proxy_country: data.proxy_country,
-      proxy_url: data.proxy_url,
+      sessionName: data.sessionName,
+      sessionTTL: data.sessionTTL?.toString(),
+      sessionRecording: data.sessionRecording?.toString(),
+      proxyCountry: data.proxyCountry,
+      proxyURL: data.proxyURL,
       fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : undefined,
-      extension_ids: data.extension_ids,
-      profile_id: data.profile_id,
-      profile_persist: data.profile_persist
+      extensionIds: data.extensionIds,
+      profileId: data.profileId,
+      profilePersist: data.profilePersist?.toString()
     };
 
-    if (data.proxy_url) {
-      delete params.proxy_country;
+    if (data.proxyURL) {
+      delete params.proxyCountry;
     }
 
     // Filter out empty values
@@ -52,14 +52,23 @@ export class BrowserService extends BaseService {
       .filter(([_, value]) => value !== undefined && value !== '')
       .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 
-    const search = new URLSearchParams(filteredParams);
+    return new URLSearchParams(filteredParams);
+  }
+
+  /**
+   * Create a browser session
+   * @param options Browser session configuration
+   * @returns Response containing devtoolsUrl
+   */
+  create(options: ICreateBrowser = {}): ICreateBrowserResponse {
+    const search = this.buildBrowserSearchParams(options);
 
     let protocol = 'wss';
     if (this.baseUrl.startsWith('http://')) {
       protocol = 'ws';
     }
     return {
-      browserWSEndpoint: `${protocol}://${this.baseUrl.replace(/^(.*?):\/\//, '')}/browser?${search.toString()}`
+      browserWSEndpoint: `${protocol}://${this.baseUrl.replace(/^(.*?):\/\//, '')}/api/v2/browser?${search.toString()}`
     };
   }
 
@@ -76,30 +85,11 @@ export class BrowserService extends BaseService {
    * @returns Response containing devtoolsUrl
    */
   async createSession(options: ICreateBrowser = {}): Promise<ICreateBrowserResponse> {
-    // Merge default options with user provided options
-    const data = { ...DEFAULT_BROWSER_OPTIONS, ...options };
-
-    // Build parameter object directly, handle special type conversions
-    const params: { [key: string]: string } = {
-      token: this.apiKey,
-      session_name: data.session_name || '',
-      session_ttl: data.session_ttl?.toString() || '',
-      session_recording: data.session_recording?.toString() || '',
-      proxy_country: data.proxy_country || 'ANY',
-      proxy_url: data.proxy_url || '',
-      fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : '',
-      extension_ids: data.extension_ids || ''
-    };
-
-    if (data.proxy_url) {
-      delete params.proxy_country;
-    }
-
-    const searchParams = new URLSearchParams(params);
+    const search = this.buildBrowserSearchParams(options);
 
     try {
       const task = await this.request<ICreateBrowserHttpResponse, true>(
-        `/browser?${searchParams.toString()}`,
+        `/api/v2/browser?${search.toString()}`,
         'GET',
         undefined,
         {},

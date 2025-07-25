@@ -7,15 +7,34 @@ import { Viewport, CDPSession } from 'puppeteer-core';
 /**
  * Browser session creation options
  */
-export interface ICreateBrowser {
-  session_name?: string;
-  session_ttl?: number;
-  session_recording?: boolean;
-  proxy_country?: string;
-  proxy_url?: string;
+export interface ICreateBrowser extends ICreateBrowserSnakeCase {
+  sessionName?: string;
+  sessionTTL?: number;
+  sessionRecording?: boolean;
+  proxyCountry?: string;
+  proxyURL?: string;
   fingerprint?: object;
+  extensionIds?: string;
+  profileId?: string;
+  profilePersist?: boolean;
+}
+
+export interface ICreateBrowserSnakeCase {
+  /** @deprecated Use `sessionName` instead */
+  session_name?: string;
+  /** @deprecated Use `sessionTTL` instead */
+  session_ttl?: number;
+  /** @deprecated Use `sessionRecording` instead */
+  session_recording?: boolean;
+  /** @deprecated Use `proxyCountry` instead */
+  proxy_country?: string;
+  /** @deprecated Use `proxyURL` instead */
+  proxy_url?: string;
+  /** @deprecated Use `extensionIds` instead */
   extension_ids?: string;
+  /** @deprecated Use `profileId` instead */
   profile_id?: string;
+  /** @deprecated Use `profilePersist` instead */
   profile_persist?: boolean;
 }
 

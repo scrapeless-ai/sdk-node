@@ -34,8 +34,8 @@ async function main() {
     // Note: In a real environment, the commented code below should be used
     // Create a browser session
     const { browserWSEndpoint } = actor.browser.create({
-      session_ttl: 180,
-      proxy_url: 'gw-us.scrapeless.io:8789:29812093F9FC-proxy-country_US-r_10m-s_Xsge8XYsRs:2MxGBhJD'
+      sessionTTL: 180,
+      proxyURL: 'gw-us.scrapeless.io:8789:29812093F9FC-proxy-country_US-r_10m-s_Xsge8XYsRs:2MxGBhJD'
     });
     log.debug('Browser session created: {0}', browserWSEndpoint);
 
