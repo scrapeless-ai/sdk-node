@@ -5,9 +5,9 @@ import { ICreateBrowser, ICreateBrowserResponse, ICreateBrowserHttpResponse } fr
 
 // Define default parameters
 const DEFAULT_BROWSER_OPTIONS: ICreateBrowser = {
-  sessionName: '',
-  sessionTTL: 180,
-  proxyCountry: 'ANY'
+  session_name: '',
+  session_ttl: 180,
+  proxy_country: 'ANY'
 };
 
 export class BrowserService extends BaseService {
@@ -28,19 +28,40 @@ export class BrowserService extends BaseService {
   private buildBrowserSearchParams(options: ICreateBrowser) {
     // Merge default options with user provided options
     const data = { ...DEFAULT_BROWSER_OPTIONS, ...options };
+    const {
+      session_name,
+      session_ttl,
+      session_recording,
+      proxy_country,
+      proxy_url,
+      extension_ids,
+      profile_id,
+      profile_persist
+    } = data;
+    const {
+      sessionName = session_name,
+      sessionTTL = session_ttl,
+      sessionRecording = session_recording,
+      proxyCountry = proxy_country,
+      proxyURL = proxy_url,
+      fingerprint,
+      extensionIds = extension_ids,
+      profileId = profile_id,
+      profilePersist = profile_persist
+    } = data;
 
     // Build parameter object directly, handle special type conversions
     const params = {
       token: this.apiKey,
-      sessionName: data.sessionName,
-      sessionTTL: data.sessionTTL?.toString(),
-      sessionRecording: data.sessionRecording?.toString(),
-      proxyCountry: data.proxyCountry,
-      proxyURL: data.proxyURL,
-      fingerprint: data.fingerprint ? JSON.stringify(data.fingerprint) : undefined,
-      extensionIds: data.extensionIds,
-      profileId: data.profileId,
-      profilePersist: data.profilePersist?.toString()
+      sessionName,
+      sessionTTL: sessionTTL?.toString(),
+      sessionRecording: sessionRecording?.toString(),
+      proxyCountry,
+      proxyURL,
+      fingerprint: fingerprint ? JSON.stringify(fingerprint) : undefined,
+      extensionIds,
+      profileId,
+      profilePersist: profilePersist?.toString()
     };
 
     if (data.proxyURL) {
