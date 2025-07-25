@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.8.2...v1.9.0) (2025-07-25)
+
+### ✨ Features
+
+- **api:** upgrade api to v2 ([4b41402](https://github.com/scrapeless-ai/sdk-node/commit/4b414025940469ae0b82de73af6347dc0049a98a))
+
 ### [1.8.2](https://github.com/scrapeless-ai/sdk-node/compare/v1.8.1...v1.8.2) (2025-07-23)
 
 ### 🐛 Bug Fixes
