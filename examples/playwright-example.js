@@ -12,11 +12,11 @@ async function runExample() {
   // Launch browser instance
 
   const browser = await Playwright.connect({
-    session_name: 'sdk-playwright-example',
-    session_ttl: 180,
-    proxy_country: 'US',
-    // proxy_url: '',
-    session_recording: true,
+    sessionName: 'sdk-playwright-example',
+    sessionTTL: 180,
+    proxyCountry: 'US',
+    // proxyURL: '',
+    sessionRecording: true,
     viewport: null
   });
   try {

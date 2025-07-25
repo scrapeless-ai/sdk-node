@@ -2,7 +2,7 @@ import { BaseService } from './base';
 import { UniversalScrapingRequest } from '../types';
 
 export class UniversalService extends BaseService {
-  private basePath = '/api/v1/unlocker';
+  private basePath = '/api/v2/unlocker';
   constructor(apiKey: string, baseUrl: string, timeout: number) {
     super(apiKey, baseUrl, timeout);
   }

@@ -31,10 +31,12 @@ export class Universal {
     return this.universalService.scrape(data);
   }
 
+  /** @deprecated */
   async akamaiwebCookie(data: UniversalScrapingRequest<UniversalAkamaiWebCookieInput, UniversalProxy>) {
     return this.universalService.scrape(data);
   }
 
+  /** @deprecated */
   async akamaiwebSensor(data: UniversalScrapingRequest<UniversalAkamaiWebSensorInput, UniversalProxy>) {
     return this.universalService.scrape(data);
   }

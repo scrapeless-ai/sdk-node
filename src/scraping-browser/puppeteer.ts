@@ -305,9 +305,9 @@ export async function createPuppeteerCDPSession(page: Page): Promise<ScrapelessC
  * import { Puppeteer } from '@scrapeless-ai/sdk';
  *
  * const browser = await Puppeteer.connect({
- *   session_name: 'my-session',
- *   proxy_country: 'US',
- *   session_ttl: 300
+ *   sessionName: 'my-session',
+ *   proxyCountry: 'US',
+ *   sessionTTL: 300
  * });
  *
  * const page = await browser.newPage();
@@ -347,8 +347,8 @@ class ScrapelessPuppeteer extends BaseBrowser {
       const { browserWSEndpoint } = this.browserService.create(config);
       logger.debug('Connecting to browser via Scrapeless API', {
         browserWSEndpoint,
-        sessionName: config.session_name,
-        proxyCountry: config.proxy_country
+        sessionName: config.sessionName,
+        proxyCountry: config.proxyCountry
       });
 
       // Connect using Puppeteer
@@ -358,7 +358,7 @@ class ScrapelessPuppeteer extends BaseBrowser {
       });
 
       logger.info('Successfully connected to Scrapeless browser', {
-        sessionName: config.session_name
+        sessionName: config.sessionName
       });
 
       // Return enhanced browser with Scrapeless functionality
@@ -367,8 +367,8 @@ class ScrapelessPuppeteer extends BaseBrowser {
       logger.error('Failed to connect to Scrapeless browser', {
         error,
         config: {
-          sessionName: config.session_name,
-          proxyCountry: config.proxy_country
+          sessionName: config.sessionName,
+          proxyCountry: config.proxyCountry
         }
       });
       throw new Error(`Failed to connect to browser: ${error instanceof Error ? error.message : String(error)}`);
@@ -388,8 +388,8 @@ class ScrapelessPuppeteer extends BaseBrowser {
  * import { Puppeteer } from '@scrapeless-ai/sdk';
  *
  * const browser = await Puppeteer.connect({
- *   session_name: 'my-session',
- *   proxy_country: 'US'
+ *   sessionName: 'my-session',
+ *   proxyCountry: 'US'
  * });
  * ```
  */

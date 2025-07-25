@@ -99,9 +99,9 @@ const client = new Scrapeless();
 
 // Create a browser session
 const { browserWSEndpoint } = await client.browser.create({
-  session_name: 'my-session',
-  session_ttl: 180,
-  proxy_country: 'US'
+  sessionName: 'my-session',
+  sessionTTL: 180,
+  proxyCountry: 'US'
 });
 
 // Connect with Puppeteer

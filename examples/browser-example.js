@@ -26,10 +26,10 @@ async function runExample() {
 
     // Create browser session and get WebSocket endpoint
     const { browserWSEndpoint } = await client.browser.createSession({
-      session_name: 'sdk_test',
-      session_ttl: 180,
-      proxy_country: 'US',
-      session_recording: true
+      sessionName: 'sdk_test',
+      sessionTTL: 180,
+      proxyCountry: 'US',
+      sessionRecording: true
     });
 
     console.log('Browser WebSocket endpoint created:', browserWSEndpoint);

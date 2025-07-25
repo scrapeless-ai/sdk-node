@@ -6,6 +6,7 @@ dist/
 build/
 lib/
 storage/*
+examples/storage/*
 
 !storage/http/
 !storage/memory/
@@ -30,6 +31,7 @@ tmp/
 temp/
 *.log
 /logs
+/storage
 .cache/
 .cursor/
 design-docs/

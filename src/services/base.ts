@@ -67,6 +67,9 @@ export abstract class BaseService {
         if (data.msg) {
           errorMessage = data.msg;
         }
+        if (data.message) {
+          errorMessage = data.message;
+        }
         if (data.code) {
           errorCode = data.code;
         }

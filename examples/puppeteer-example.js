@@ -12,10 +12,10 @@ async function runExample() {
   logger.debug('Starting browser...');
   // Launch browser instance
   const browser = await Puppeteer.connect({
-    session_name: 'sdk-puppeteer-example',
-    session_ttl: 180,
-    proxy_country: 'US',
-    session_recording: true,
+    sessionName: 'sdk-puppeteer-example',
+    sessionTTL: 180,
+    proxyCountry: 'US',
+    sessionRecording: true,
     defaultViewport: null
   });
   try {
