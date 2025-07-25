@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.9.0...v1.9.1) (2025-07-25)
+
+### 🐛 Bug Fixes
+
+- **browser:** handle legacy snake_case parameters for browser API compatibility ([8e6d934](https://github.com/scrapeless-ai/sdk-node/commit/8e6d93410aafe477323d3d37cf88ee0636444d1f))
+
 ## [1.9.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.8.2...v1.9.0) (2025-07-25)
 
 ### ✨ Features
