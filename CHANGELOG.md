@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.9.1...v1.10.0) (2025-11-06)
+
+### ✨ Features
+
+- proxy support ipv6 and datacenter ([88e8970](https://github.com/scrapeless-ai/sdk-node/commit/88e89703345abaec973295e2e9e6664a176ddd83))
+
 ### [1.9.1](https://github.com/scrapeless-ai/sdk-node/compare/v1.9.0...v1.9.1) (2025-07-25)
 
 ### 🐛 Bug Fixes
