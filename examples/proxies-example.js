@@ -19,6 +19,7 @@ async function testCreateProxy() {
     console.log('Testing proxy creation with specific parameters...');
 
     const proxyUrl = client.proxies.proxy({
+      type: 'residential',
       country: 'US',
       sessionDuration: 30,
       sessionId: 'test-session-123',
@@ -42,6 +43,7 @@ async function testCreateProxyAlias() {
     console.log('Testing createProxy alias method...');
 
     const proxyUrl = client.proxies.createProxy({
+      type: 'ipv6',
       country: 'UK',
       sessionDuration: 60,
       sessionId: 'test-session-456',
@@ -71,6 +73,7 @@ async function testGenerateSessionId() {
 
     // Create a proxy with the generated session ID
     const proxyUrl = client.proxies.proxy({
+      type: 'ipv6',
       country: 'JP',
       sessionDuration: 15,
       sessionId: sessionId,

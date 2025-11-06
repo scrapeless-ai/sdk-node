@@ -19,7 +19,7 @@ export class ProxiesService extends BaseService implements ScrapelessProxy {
     const token = this.apiKey;
 
     // Format the base URL for the proxy
-    const baseURL = 'http://CHANNEL-proxy.residential-country_';
+    const baseURL = `http://CHANNEL-proxy.${proxy.type}-country_`;
 
     // Construct the full proxy URL with country, session duration, session ID, and gateway
     return `${baseURL}${proxy.country}-r_${proxy.sessionDuration}m-s_${proxy.sessionId}:${token}@${proxy.gateway}`;

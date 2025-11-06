@@ -1,7 +1,14 @@
+export type IProxyType = 'residential' | 'ipv6' | 'datacenter';
+
 /**
  * Proxy configuration interface for creating residential proxies
  */
 export interface ICreateProxy {
+  /**
+   * Proxy type (e.g., 'residential', 'ipv6', 'datacenter')
+   */
+  type: IProxyType;
+
   /**
    * Country code for the proxy (e.g., 'US', 'UK', 'JP')
    */
