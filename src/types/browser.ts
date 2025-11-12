@@ -12,6 +12,8 @@ export interface ICreateBrowser extends ICreateBrowserSnakeCase {
   sessionTTL?: number;
   sessionRecording?: boolean;
   proxyCountry?: string;
+  proxyState?: string;
+  proxyCity?: string;
   proxyURL?: string;
   fingerprint?: object;
   extensionIds?: string;
@@ -28,6 +30,10 @@ export interface ICreateBrowserSnakeCase {
   session_recording?: boolean;
   /** @deprecated Use `proxyCountry` instead */
   proxy_country?: string;
+  /** @deprecated Use `proxyState` instead */
+  proxy_state?: string;
+  /** @deprecated Use `proxyCity` instead */
+  proxy_city?: string;
   /** @deprecated Use `proxyURL` instead */
   proxy_url?: string;
   /** @deprecated Use `extensionIds` instead */

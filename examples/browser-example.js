@@ -29,6 +29,8 @@ async function runExample() {
       sessionName: 'sdk_test',
       sessionTTL: 180,
       proxyCountry: 'US',
+      proxyState: 'KS',
+      proxyCity: 'gardner',
       sessionRecording: true
     });
 

@@ -15,6 +15,16 @@ export interface ICreateProxy {
   country: string;
 
   /**
+   * State code for the proxy (e.g., 'AL', 'KS')
+   */
+  state?: string;
+
+  /**
+   * City code for the proxy (e.g., 'foley', 'gardner')
+   */
+  city?: string;
+
+  /**
    * Session duration in minutes
    */
   sessionDuration: number;

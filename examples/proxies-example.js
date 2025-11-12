@@ -21,6 +21,8 @@ async function testCreateProxy() {
     const proxyUrl = client.proxies.proxy({
       type: 'residential',
       country: 'US',
+      state: 'KS',
+      city: 'gardner',
       sessionDuration: 30,
       sessionId: 'test-session-123',
       gateway: 'gate.smartproxy.com:7000'
