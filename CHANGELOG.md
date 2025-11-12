@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.10.0...v1.11.0) (2025-11-12)
+
+### ✨ Features
+
+- create browser support send proxy state and proxy city ([761fe8e](https://github.com/scrapeless-ai/sdk-node/commit/761fe8e93078e8f44cb4a4ca8bc789f828986f57))
+
 ## [1.10.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.9.1...v1.10.0) (2025-11-06)
 
 ### ✨ Features
