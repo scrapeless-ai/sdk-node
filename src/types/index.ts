@@ -13,3 +13,4 @@ export * from './storage';
 export * from './scraping-crawl';
 export * from './extension';
 export * from './profile';
+export * from './ai-scraper';

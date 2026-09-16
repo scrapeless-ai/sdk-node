@@ -6,6 +6,8 @@
 
 The official Node.js SDK for [Scrapeless AI](https://scrapeless.com) - End-to-End Data Infrastructure for AI Developers & Enterprises.
 
+New to Scrapeless? [Sign up](https://app.scrapeless.com/passport/login?utm_source=github) and get $5 in free credits.
+
 ## 📑 Table of Contents
 
 - [🌟 Features](#-features)
@@ -28,8 +30,7 @@ The official Node.js SDK for [Scrapeless AI](https://scrapeless.com) - End-to-En
 - **Scraping API**: Direct data extraction APIs for websites (e.g., e-commerce, travel platforms). Retrieve structured product information, pricing, and reviews with pre-built connectors.
 - **Deep SerpApi**: Google SERP data extraction API. Fetch organic results, news, images, and more with customizable parameters and real-time updates.
 - **Proxies**: Geo-targeted proxy network with 195+ countries. Optimize requests for better success rates and regional data access.
-- **Actor**: Deploy custom crawling and data processing workflows at scale with built-in scheduling and resource management.
-- **Storage Solutions**: Scalable data storage solutions for crawled content, supporting seamless integration with cloud services and databases.
+- **AI Scraper**: Extract AI chat answers, citations, and brand mentions across supported models.
 - **TypeScript Support**: Full TypeScript definitions for better development experience
 
 ## 📦 Installation
@@ -79,8 +80,6 @@ SCRAPELESS_API_KEY=your-api-key
 
 # Optional - Custom API endpoints
 SCRAPELESS_BASE_API_URL=https://api.scrapeless.com
-SCRAPELESS_ACTOR_API_URL=https://actor.scrapeless.com
-SCRAPELESS_STORAGE_API_URL=https://storage.scrapeless.com
 SCRAPELESS_BROWSER_API_URL=https://browser.scrapeless.com
 SCRAPELESS_CRAWL_API_URL=https://api.scrapeless.com
 ```
@@ -116,14 +115,13 @@ console.log(await page.title());
 await browser.close();
 ```
 
-### Crawl
+### Browser Profile
 
-Extract data from single pages or traverse entire domains, exporting in formats including Markdown, JSON, HTML, screenshots, and links.
+Manage browser profiles for persistent sessions.
 
 ```javascript
-const result = await client.scrapingCrawl.scrapeUrl('https://example.com');
-
-console.log(result);
+const createResponse = await client.profiles.create('My Profile');
+console.log('Profile created:', createResponse);
 ```
 
 ### Scraping API
@@ -141,48 +139,72 @@ const result = await client.scraping.scrape({
 console.log(result.data);
 ```
 
-### Deep SerpApi
+### Universal Scraping API
 
-Google SERP data extraction API. Fetch organic results, news, images, and more with customizable parameters and real-time updates:
+Extract data from websites using the Universal Scraping API.
 
 ```javascript
-const results = await client.deepserp.scrape({
-  actor: 'scraper.google.search',
+const result = await client.universal.scrape({
+  actor: 'unlocker.webunlocker',
+  input: { url: 'https://example.com', method: 'GET', redirect: false }
+});
+console.log(result);
+```
+
+### Crawl
+
+Extract data from single pages or traverse entire domains, exporting in formats including Markdown, JSON, HTML, screenshots, and links.
+
+```javascript
+const result = await client.scrapingCrawl.scrapeUrl('https://example.com');
+
+console.log(result);
+```
+
+### Proxy
+
+Generate a proxy URL using your gateway and session settings.
+
+```javascript
+const proxyUrl = client.proxies.proxy({
+  type: 'residential',
+  country: 'US',
+  sessionDuration: 30,
+  sessionId: client.proxies.generateSessionId(),
+  gateway: 'your-proxy-gateway:port'
+});
+console.log(proxyUrl);
+```
+
+### AI Scraper
+
+Extract AI chat content in bulk to monitor brand mentions, compare answers, and analyze competitive intelligence from the latest models. Retrieve URLs, prompts, Markdown answers, citations, and more through one integration.
+
+Supported actors include `scraper.chatgpt`, `scraper.perplexity`, `scraper.copilot`, `scraper.gemini`, `scraper.aimode`, `scraper.overview`, `scraper.grok`, and `scraper.alexa`. The `input` JSON depends on the actor; see the [AI Scraper documentation](https://docs.scrapeless.com/en/llm-chat-scraper/quickstart/introduction/) for detailed parameters. The optional `webhook` JSON contains a callback `url`.
+
+```javascript
+import { Scrapeless } from '@scrapeless-ai/sdk';
+
+const client = new Scrapeless(); // Uses SCRAPELESS_API_KEY
+
+const task = await client.aiScraper.createTask({
+  actor: 'scraper.chatgpt',
   input: {
-    q: 'nike site:www.nike.com'
+    prompt: 'Most reliable proxy service for data extraction',
+    country: 'US',
+    web_search: true
   }
+  // Optional: webhook: { url: 'https://your-webhook.example.com' }
 });
+console.log('Created task:', task);
 
-console.log(results);
+const result = await client.aiScraper.getTaskResult(task.task_id);
+console.log('Task status and result:', result);
+// If status is 'running', call getTaskResult again later.
+// If status is 'failed', message contains the failure reason.
 ```
 
-### Actor
-
-Deploy custom crawling and data processing workflows at scale with built-in scheduling and resource management:
-
-```javascript
-// Run an actor
-const run = await client.actor.run(actor.id, {
-  input: { url: 'https://example.com' },
-  runOptions: {
-    CPU: 2,
-    memory: 2048,
-    timeout: 3600,
-    version: 'v1.0.0'
-  }
-});
-
-console.log('Actor run result:', run);
-```
-
-### Profiles
-
-Manage browser profiles for persistent sessions.
-
-```javascript
-const createResponse = await client.profiles.create('My Profile');
-console.log('Profile created:', createResponse);
-```
+Both methods return the API JSON unchanged. Creation returns `task_id`, `status`, and, when available, `task_result`. Result retrieval returns `status`, `task_result` when available, and `message` on failure. Status is `success`, `failed`, or `running`; the SDK does not poll automatically.
 
 ## 🔧 API Reference
 
@@ -193,8 +215,6 @@ interface ScrapelessConfig {
   apiKey?: string; // Your API key
   timeout?: number; // Request timeout in milliseconds (default: 30000)
   baseApiUrl?: string; // Base API URL
-  actorApiUrl?: string; // Actor service URL
-  storageApiUrl?: string; // Storage service URL
   browserApiUrl?: string; // Browser service URL
   scrapingCrawlApiUrl?: string; // Crawl service URL
 }
@@ -210,8 +230,8 @@ The SDK provides the following services through the main client:
 - `client.scraping` - Pre-built connectors for sites (e.g., e-commerce, travel) to extract product data, pricing, and reviews.
 - `client.deepserp` - Search engine results extraction
 - `client.proxies` - Proxy management
-- `client.actor` - Scalable workflow automation with built-in scheduling and resource management.
-- `client.storage` - Data storage solutions
+- `client.profiles` - Browser profile management
+- `client.aiScraper` - AI chat task creation and result retrieval
 
 ### Error Handling
 
@@ -237,9 +257,11 @@ Check out the [`examples`](./examples) directory for comprehensive usage example
 - [Browser](./examples/browser-example.js)
 - [Playwright Integration](./examples/playwright-example.js)
 - [Puppeteer Integration](./examples/puppeteer-example.js)
+- [Browser Profile](./examples/browser-profile-example.js)
 - [Scraping API](./examples/scraping-example.js)
-- [Actor](./examples/actor-example.js)
-- [Storage Usage](./examples/storage-example.js)
+- [Universal Scraping API](./examples/universal-example.js)
+- [Crawl](./examples/scraping-crawl-example.js)
+- [AI Scraper](./examples/ai-scraper-example.js)
 - [Proxies](./examples/proxies-example.js)
 - [Deep SerpApi](./examples/deepserp-example.js)
 
@@ -295,3 +317,9 @@ Visit [scrapeless.com](https://scrapeless.com) to learn more and get started.
 ---
 
 Made with ❤️ by the Scrapeless team
+
+## Related Projects
+
+- [Scrapeless Python SDK](https://github.com/scrapeless-ai/sdk-python)
+- [Scrapeless Node.js SDK](https://github.com/scrapeless-ai/sdk-node)
+- [Scrapeless Go SDK](https://github.com/scrapeless-ai/sdk-go)
