@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.12.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.11.0...v1.12.0) (2026-09-16)
+
+
+### ✨ Features
+
+* 🎸 Add AI Scraper ([8c9936b](https://github.com/scrapeless-ai/sdk-node/commit/8c9936b20e03f98e4739b7d1cd2ea83e953b567d))
+
 ## [1.11.0](https://github.com/scrapeless-ai/sdk-node/compare/v1.10.0...v1.11.0) (2025-11-12)
 
 ### ✨ Features
