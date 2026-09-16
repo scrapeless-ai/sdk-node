@@ -4,9 +4,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 
-The official Node.js SDK for [Scrapeless AI](https://scrapeless.com) - End-to-End Data Infrastructure for AI Developers & Enterprises.
+The official Node.js SDK for [Scrapeless AI](https://scrapeless.com?utm_source=github&utm_medium=referral&utm_campaign=node_sdk_repo) - End-to-End Data Infrastructure for AI Developers & Enterprises.
 
-New to Scrapeless? [Sign up](https://app.scrapeless.com/passport/login?utm_source=github) and get $5 in free credits.
+New to Scrapeless? [Sign up](https://app.scrapeless.com/passport/login?utm_source=github&utm_medium=referral&utm_campaign=node_sdk_repo) and get $5 in free credits.
 
 ## 📑 Table of Contents
 
@@ -25,10 +25,10 @@ New to Scrapeless? [Sign up](https://app.scrapeless.com/passport/login?utm_sourc
 ## 🌟 Features
 
 - **Browser**: Advanced browser session management supporting Playwright and Puppeteer frameworks, with configurable anti-detection capabilities (e.g., fingerprint spoofing, CAPTCHA solving) and extensible automation workflows.
-- **Universal Scraping API**: web interaction and data extraction with full browser capabilities. Execute JavaScript rendering, simulate user interactions (clicks, scrolls), bypass anti-scraping measures, and export structured data in formats.
+- **Web Unlocker**: web interaction and data extraction with full browser capabilities. Execute JavaScript rendering, simulate user interactions (clicks, scrolls), bypass anti-scraping measures, and export structured data in formats.
 - **Crawl**: Extract data from single pages or traverse entire domains, exporting in formats including Markdown, JSON, HTML, screenshots, and links.
 - **Scraping API**: Direct data extraction APIs for websites (e.g., e-commerce, travel platforms). Retrieve structured product information, pricing, and reviews with pre-built connectors.
-- **Deep SerpApi**: Google SERP data extraction API. Fetch organic results, news, images, and more with customizable parameters and real-time updates.
+- **Google Search API**: Google SERP data extraction API. Fetch organic results, news, images, and more with customizable parameters and real-time updates.
 - **Proxies**: Geo-targeted proxy network with 195+ countries. Optimize requests for better success rates and regional data access.
 - **AI Scraper**: Extract AI chat answers, citations, and brand mentions across supported models.
 - **TypeScript Support**: Full TypeScript definitions for better development experience
@@ -57,7 +57,7 @@ pnpm add @scrapeless-ai/sdk
 
 ### Prerequisite
 
-[Log in](https://app.scrapeless.com) to the Scrapeless Dashboard and get the API Key
+[Log in](https://app.scrapeless.com?utm_source=github&utm_medium=referral&utm_campaign=node_sdk_repo) to the Scrapeless Dashboard and get the API Key
 
 ### Basic Setup
 
@@ -139,9 +139,9 @@ const result = await client.scraping.scrape({
 console.log(result.data);
 ```
 
-### Universal Scraping API
+### Web Unlocker
 
-Extract data from websites using the Universal Scraping API.
+Extract data from websites using Web Unlocker (exposed as `client.universal`).
 
 ```javascript
 const result = await client.universal.scrape({
@@ -180,7 +180,7 @@ console.log(proxyUrl);
 
 Extract AI chat content in bulk to monitor brand mentions, compare answers, and analyze competitive intelligence from the latest models. Retrieve URLs, prompts, Markdown answers, citations, and more through one integration.
 
-Supported actors include `scraper.chatgpt`, `scraper.perplexity`, `scraper.copilot`, `scraper.gemini`, `scraper.aimode`, `scraper.overview`, `scraper.grok`, and `scraper.alexa`. The `input` JSON depends on the actor; see the [AI Scraper documentation](https://docs.scrapeless.com/en/llm-chat-scraper/quickstart/introduction/) for detailed parameters. The optional `webhook` JSON contains a callback `url`.
+Supported actors include `scraper.chatgpt`, `scraper.perplexity`, `scraper.copilot`, `scraper.gemini`, `scraper.aimode`, `scraper.overview`, `scraper.grok`, and `scraper.alexa`. The `input` JSON depends on the actor; see the [AI Scraper documentation](https://docs.scrapeless.com/en/llm-chat-scraper/quickstart/introduction/?utm_source=github&utm_medium=referral&utm_campaign=node_sdk_repo) for detailed parameters. The optional `webhook` JSON contains a callback `url`.
 
 ```javascript
 import { Scrapeless } from '@scrapeless-ai/sdk';
@@ -225,10 +225,10 @@ interface ScrapelessConfig {
 The SDK provides the following services through the main client:
 
 - `client.browser` - browser automation with Playwright/Puppeteer support, anti-detection tools (fingerprinting, CAPTCHA solving), and extensible workflows.
-- `client.universal` - JS rendering, user simulation (clicks/scrolls), anti-block bypass, and structured data export.
+- `client.universal` - the Web Unlocker feature: JS rendering, user simulation (clicks/scrolls), anti-block bypass, and structured data export.
 - `client.scrapingCrawl` - Recursive site crawling with multi-format export (Markdown, JSON, HTML, screenshots, links).
 - `client.scraping` - Pre-built connectors for sites (e.g., e-commerce, travel) to extract product data, pricing, and reviews.
-- `client.deepserp` - Search engine results extraction
+- `client.deepserp` - the Google Search API feature: search engine (Google SERP) results extraction
 - `client.proxies` - Proxy management
 - `client.profiles` - Browser profile management
 - `client.aiScraper` - AI chat task creation and result retrieval
@@ -259,11 +259,11 @@ Check out the [`examples`](./examples) directory for comprehensive usage example
 - [Puppeteer Integration](./examples/puppeteer-example.js)
 - [Browser Profile](./examples/browser-profile-example.js)
 - [Scraping API](./examples/scraping-example.js)
-- [Universal Scraping API](./examples/universal-example.js)
+- [Web Unlocker](./examples/universal-example.js)
 - [Crawl](./examples/scraping-crawl-example.js)
 - [AI Scraper](./examples/ai-scraper-example.js)
 - [Proxies](./examples/proxies-example.js)
-- [Deep SerpApi](./examples/deepserp-example.js)
+- [Google Search API](./examples/deepserp-example.js)
 
 ## 🧪 Testing
 
@@ -298,7 +298,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📖 **Documentation**: [https://docs.scrapeless.com](https://docs.scrapeless.com)
+- 📖 **Documentation**: [https://docs.scrapeless.com](https://docs.scrapeless.com?utm_source=github&utm_medium=referral&utm_campaign=node_sdk_repo)
 - 💬 **Community**: [Join our Discord](https://backend.scrapeless.com/app/api/v1/public/links/discord)
 - 🐛 **Issues**: [GitHub Issues](https://github.com/scrapeless-ai/sdk-node/issues)
 - 📧 **Email**: [support@scrapeless.com](mailto:support@scrapeless.com)
@@ -312,7 +312,7 @@ Scrapeless is a powerful web scraping and browser automation platform that helps
 - Browser automation capabilities
 - Enterprise-grade reliability and support
 
-Visit [scrapeless.com](https://scrapeless.com) to learn more and get started.
+Visit [scrapeless.com](https://scrapeless.com?utm_source=github&utm_medium=referral&utm_campaign=node_sdk_repo) to learn more and get started.
 
 ---
 
